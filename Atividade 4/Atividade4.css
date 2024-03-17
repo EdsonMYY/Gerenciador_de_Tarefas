@@ -1,0 +1,177 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    background-color: #222326;; /* #343538 #211f1f*/
+    color: #cccccc;
+}
+
+.mainbar {
+    top: 0px;
+    position: fixed;
+    right: 0;
+    left: 0;
+    /*z-index: 99910;*/
+    width: 100%;
+    /*transition: all .3s ease-in-out;*/
+}
+
+#headbar {
+    align-items: center;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    background-color: rgb(73, 104, 150);
+    height: 56px;
+}
+
+#navbar_left {
+    justify-content: flex-start;
+    align-items: center;
+    display: flex;
+    column-gap: 22px;
+    margin-right: 100px;
+}
+
+#navbar_right {
+    display: inline-block;
+    align-items: center;
+    display: flex;
+    justify-content: flex-end;
+    gap: 52px;
+
+}
+
+#firstNav {
+    position: relative;
+}
+
+.navbar_items {
+    list-style: none;
+    text-transform: uppercase;
+    column-gap: 32px;
+    display: flex;
+}
+
+#navbar_user {
+    display: flex;
+}
+
+#navContent {
+    text-align: center;
+    background-color: rgba(68, 69, 72, 1);
+    margin-top: 56px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+h2 {
+    font-size: 15px;
+}
+
+#navContent_items {
+    text-align: center;
+    list-style: none;
+    text-transform: uppercase;
+    display: flex;
+    gap: 16px;
+    justify-content: space-between;
+    width: 1272px;
+    margin: 0 auto;
+    padding: 0 16px;
+}
+
+#mainsection {
+    font-family: 'Times New Roman', Times, serif;
+    padding-right: 250px;
+    padding-left: 250px;
+}
+
+.container {
+    display: flex;
+    width: 100%;
+    margin: 0 auto;
+    gap: 16px;   /* espaço entre os cards */
+    padding-top: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr; /* quatro colunas com tamanho igual */
+    grid-gap: 16px;
+}
+
+.categoria {
+    font-size: 20px;
+}
+
+#recomendado {
+    font-size: 20px;
+}
+
+.maincard {
+    display: flex;
+    grid-column-end: 3;
+    grid-column-start: 1;
+}
+
+.maincard_img {
+    overflow: hidden;
+    border-radius: 8px;
+    height: 299px;
+    width: 420px;
+}
+
+#TitleMainCard {
+    font-size: 45px;
+}
+    
+
+.card_img {
+    overflow: hidden;
+    border-radius: 8px;
+    height: 200px;
+    width: 326px;
+}
+
+.groupcard {
+    padding-top: 20px;
+    grid-column-start: 1;
+    grid-column-end: 5;
+    display: flex;
+    align-items: center;
+}
+
+.lcard {
+    display: flex;
+    gap: 16px;
+}
+
+.lcard_img {
+    overflow: hidden;
+    border-radius: 8px;
+    height: 120px;
+    width: 200px;
+}
+
+.maincardtext {
+    width: 100%;
+}
+
+.cardtext {
+    font-size: 18px;
+}
+
+.lcardtext {
+    line-height: 21px;
+    width: 100%;
+    font-size: 15px;
+}
+
+h3 {
+    font-weight: 400;
+}
+
+footer {
+    background-color: rgba(68, 69, 72, 1);
+    color: whitesmoke;
+    text-align: center;
+    padding-top: 9px;
+    padding-bottom: 9px;
+}
