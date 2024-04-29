@@ -2,7 +2,7 @@ var altura = parseFloat(prompt("Digite a sua altura: "));
 var peso = parseFloat(prompt("Digite seu peso: "));
 
 function calcularIMC(altura, peso) {
-    var imc = peso / math.pow(altura, 2);
+    var imc = peso / Math.pow(altura, 2);
 
     if (imc < 18.5) {
         return `Seu IMC é ${imc.toFixed(2)}. Você está abaixo do peso.`;
