@@ -3,6 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const listaTarefas = document.getElementById('lista-tarefas');
   
     let tarefas = []; // Array para armazenar as tarefas
+
+    let indiceEdicao = null; 
   
     // Carregar tarefas do localStorage (se houver)
     carregarTarefas();
@@ -10,16 +12,26 @@ document.addEventListener('DOMContentLoaded', () => {
     // Event Listener para adicionar nova tarefa
     formulario.addEventListener('submit', (event) => {
         event.preventDefault();
-  
-        const novaTarefa = {
-            titulo: document.getElementById('titulo').value,
-            descricao: document.getElementById('descricao').value,
-            data: document.getElementById('data').value,
-            prioridade: document.getElementById('prioridade').value,
-            status: 'pendente'
-        };
-  
-        tarefas.push(novaTarefa);
+    
+        if (indiceEdicao !== null) {
+            // Editar tarefa existente
+            tarefas[indiceEdicao] = {
+                titulo: document.getElementById('titulo').value,
+                descricao: document.getElementById('descricao').value,
+                data: document.getElementById('data').value,
+                prioridade: document.getElementById('prioridade').value,
+                status: tarefas[indiceEdicao].status // Manter o status original
+            };
+            indiceEdicao = null; // Limpar o índice após a edição
+            document.getElementById('btn-adicionar').textContent = 'Adicionar Tarefa';
+        } else {
+            // Adicionar nova tarefa (mesmo código de antes)
+            const novaTarefa = { 
+                // ... 
+            };
+            tarefas.push(novaTarefa);
+        }
+    
         salvarTarefas();
         renderizarTarefas();
         formulario.reset();
@@ -65,7 +77,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const btnExcluir = li.querySelector('.excluir');
   
         btnEditar.addEventListener('click', () => {
-            // Lógica para editar a tarefa
+            indiceEdicao = index;
+
+            // Preencher o formulário com os dados da tarefa
+            document.getElementById('titulo').value = tarefas[index].titulo;
+            document.getElementById('descricao').value = tarefas[index].descricao;
+            document.getElementById('data').value = tarefas[index].data;
+            document.getElementById('prioridade').value = tarefas[index].prioridade;
+
+            // Alterar texto do botão para "Salvar Edição"
+            document.getElementById('btn-adicionar').textContent = 'Salvar Edição';
         });
   
         btnConcluir.addEventListener('click', () => {
