@@ -1,0 +1,63 @@
+/* Estilização geral da página */
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+header {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 1em 0;
+}
+
+main {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilização do formulário */
+#formulario-tarefa label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+#formulario-tarefa input,
+#formulario-tarefa textarea,
+#formulario-tarefa select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+/* Estilização da lista de tarefas */
+#lista-tarefas li {
+    background-color: #eee;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.concluida {
+    text-decoration: line-through;
+    color: #999;
+}
+
+.proxima {
+    border-left: 5px solid orange;
+}
+
+.urgente {
+    border-left: 5px solid red;
+}
