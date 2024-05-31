@@ -13,6 +13,13 @@ header {
     padding: 1em 0;
 }
 
+header .usuario svg {
+    width: 1.5em;
+    height: 1.5em;
+    vertical-align: middle;
+    margin-right: 0.5em; /* Espaçamento entre o ícone e o nome */
+}
+
 main {
     max-width: 800px;
     margin: 20px auto;
