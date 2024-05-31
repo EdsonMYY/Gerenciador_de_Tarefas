@@ -50,6 +50,17 @@ main {
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+    /* Estilos para os ícones de status DENTRO do LI */
+    .pendente {
+        color: #f0ad4e; /* Cor laranja para pendente */
+        margin-right: 5px; /* Espaçamento à direita */
+    }
+
+    .concluida {
+        color: #5cb85c; /* Cor verde para concluída */
+        margin-right: 5px; /* Espaçamento à direita */
+    }
 }
 
 .concluida {
