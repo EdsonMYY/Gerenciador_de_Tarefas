@@ -4,8 +4,30 @@ document.addEventListener('DOMContentLoaded', () => {
     const listaProfissional = document.getElementById('lista-tarefas-profissional');
     const listaAcademica = document.getElementById('lista-tarefas-academica');
 
+    // Controles do Modal (Pop-up)
+    const modal = document.getElementById("modal-tarefa");
+    const btnAbrirModal = document.getElementById("abrir-modal");
+    const btnFecharModal = document.querySelector(".fechar-modal");
+
     let tarefas = []; // Array para armazenar as tarefas
     let indiceEdicao = null;
+
+    // Abrir o modal
+    btnAbrirModal.addEventListener("click", () => {
+        modal.style.display = "block";
+    });
+
+    // Fechar o modal
+    btnFecharModal.addEventListener("click", () => {
+        modal.style.display = "none";
+    });
+
+    // Fechar o modal ao clicar fora do conteúdo
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
 
     // Carregar tarefas do localStorage (se houver)
     carregarTarefas();
@@ -42,6 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
         salvarTarefas();
         renderizarTarefas();
         formulario.reset();
+        modal.style.display = "none"; // Fechar o modal após adicionar/editar
     });
 
     // Função para renderizar tarefas na lista
@@ -103,6 +126,9 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('data').value = tarefas[index].data;
             document.getElementById('prioridade').value = tarefas[index].prioridade;
             document.getElementById('categoria').value = tarefas[index].categoria;
+
+            // Abrir o modal de edição
+            modal.style.display = "block"; 
 
             // Alterar texto do botão para "Salvar Edição"
             document.getElementById('btn-adicionar').textContent = 'Salvar Edição';
