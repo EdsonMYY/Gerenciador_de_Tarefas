@@ -38,7 +38,10 @@ main {
 }
 
 /* Estilização da lista de tarefas */
-#lista-tarefas li {
+#lista-tarefas li, 
+#lista-tarefas-pessoal li, 
+#lista-tarefas-profissional li, 
+#lista-tarefas-academica li { /* Estilos para todas as listas */
     background-color: #eee;
     padding: 10px;
     margin-bottom: 10px;
@@ -60,4 +63,17 @@ main {
 
 .urgente {
     border-left: 5px solid red;
+}
+
+/* Estilização das colunas */
+.colunas {
+    display: flex;
+    gap: 20px; /* Espaçamento entre as colunas */
+}
+
+.coluna {
+    flex: 1; /* Distribui o espaço igualmente entre as colunas */
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 4px;
 }

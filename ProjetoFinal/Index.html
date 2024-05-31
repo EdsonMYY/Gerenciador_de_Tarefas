@@ -14,13 +14,6 @@
         <section class="adicionar-tarefa">
             <h2>Adicionar Nova Tarefa</h2>
             <form id="formulario-tarefa">
-                <label for="categoria">Categoria:</label>
-                <input type="text" id="categoria" name="categoria" placeholder="Ex: Pessoal, Profissional...">
-                </form>
-        </section>
-        <section class="adicionar-tarefa">
-            <h2>Adicionar Nova Tarefa</h2>
-            <form id="formulario-tarefa">
                 <label for="titulo">Título:</label>
                 <input type="text" id="titulo" name="titulo" required>
 
@@ -37,17 +30,29 @@
                     <option value="Alta">Alta</option>
                 </select>
 
-                <button type="submit">Adicionar Tarefa</button>
+                <label for="categoria">Categoria:</label>
+                <input type="text" id="categoria" name="categoria" placeholder="Ex: Pessoal, Profissional...">
+
+                <button type="submit" id="btn-adicionar">Adicionar Tarefa</button>
             </form>
         </section>
 
         <section class="lista-tarefas">
             <h2>Lista de Tarefas</h2>
-            <div class="filtros">
-                <label for="filtro-categoria">Filtrar por Categoria:</label>
-                <input type="text" id="filtro-categoria" placeholder="Digite a categoria">
+            <div class="colunas">
+                <div class="coluna">
+                    <h3>Pessoal</h3>
+                    <ul id="lista-tarefas-pessoal"></ul>
+                </div>
+                <div class="coluna">
+                    <h3>Profissional</h3>
+                    <ul id="lista-tarefas-profissional"></ul>
+                </div>
+                <div class="coluna">
+                    <h3>Acadêmica</h3>
+                    <ul id="lista-tarefas-academica"></ul>
+                </div>
             </div>
-            <ul id="lista-tarefas"></ul>
         </section>
     </main>
     <footer>
