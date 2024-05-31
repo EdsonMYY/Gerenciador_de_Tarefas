@@ -76,6 +76,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         tarefas.forEach((tarefa, index) => {
             const li = document.createElement('li');
+
+            const iconeStatus = document.createElement('i');
+            if (tarefa.status === 'pendente') {
+                iconeStatus.classList.add('fas', 'fa-clock', 'pendente'); // Ícone de relógio para pendente
+            } else {
+                iconeStatus.classList.add('fas', 'fa-check-circle', 'concluida'); // Ícone de círculo com check para concluída
+            }
+            li.appendChild(iconeStatus);
+
             li.innerHTML = `
                 <span>${tarefa.titulo} - ${tarefa.data} - ${tarefa.prioridade} - ${tarefa.categoria}</span>
                 <div>
