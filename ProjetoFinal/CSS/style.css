@@ -65,6 +65,16 @@ main {
     border-left: 5px solid red;
 }
 
+footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 1em 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
 /* Estilização das colunas */
 .colunas {
     display: flex;
