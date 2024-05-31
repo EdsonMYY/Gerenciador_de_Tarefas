@@ -77,15 +77,18 @@ document.addEventListener('DOMContentLoaded', () => {
         tarefas.forEach((tarefa, index) => {
             const li = document.createElement('li');
 
+            li.innerHTML = ''; // Limpa o conteúdo HTML existente antes de adicionar o novo
+            // Criar elemento para o ícone de status
             const iconeStatus = document.createElement('i');
             if (tarefa.status === 'pendente') {
                 iconeStatus.classList.add('fas', 'fa-clock', 'pendente'); // Ícone de relógio para pendente
             } else {
                 iconeStatus.classList.add('fas', 'fa-check-circle', 'concluida'); // Ícone de círculo com check para concluída
             }
-            li.appendChild(iconeStatus);
+            li.appendChild(iconeStatus); // Adicionar o ícone ao li
 
-            li.innerHTML = `
+            // Adicione o span e os botões usando innerHTML
+            li.innerHTML += `
                 <span>${tarefa.titulo} - ${tarefa.data} - ${tarefa.prioridade} - ${tarefa.categoria}</span>
                 <div>
                     <button class="editar" data-index="${index}">Editar</button>
