@@ -17,6 +17,21 @@
 </head>
 <body>
     <h1>Professores</h1>
+    <table id="tabela1" border="1px" cellpadding="5px" cellspacing="0">
+        <tr class="cabeca">
+            <td>Nome</td>
+            <td>E-mail</td>
+        </tr>
+        <% console.log('QUANTIDADE DE REGISTROS->'+profs.length); %>
+
+        <% for(var i=0; i < profs.length;i++) {%>
+            <tr>
+                <td><%=profs[i].NOME_PROFESSOR%></td>
+                <td><%=profs[i].EMAIL_PROFESSOR%></td>
+            </tr>
+
+            <%}%>
+    </table>
     <h2>Grande Munari</h2>
     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQc_NKDbW6X1jGhgIQQSZz_sZgMxvRVqWWt2K44Bvsnrk5y64pbm6ucyNx_ARR7W7szV0&usqp=CAU">
 
