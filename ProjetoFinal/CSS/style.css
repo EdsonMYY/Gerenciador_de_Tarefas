@@ -71,6 +71,17 @@ h1, h3 {
     color: #dc3545; /* Vermelho */
 }
 
+/* Estilos para o status da tarefa */
+.status-pendente {
+    color: #dc3545; /* Vermelho para pendente */
+    background-color: #dc3545; /* Adiciona a cor de fundo para o status pendente */
+    color: white; /* Define a cor da fonte como branca */
+}
+
+.status-encerrada {
+    color: #28a745; /* Verde para encerrada */
+}
+
 header {
     background-color: #333;
     color: #fff;
@@ -102,7 +113,6 @@ footer {
     color: #fff;
     text-align: center;
     padding: 1em 0;
-    position: fixed;
     bottom: 0;
     width: 100%;
 }

@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
         objectStore.createIndex('data', 'data', { unique: false });
         objectStore.createIndex('prioridade', 'prioridade', { unique: false });
         objectStore.createIndex('categoria', 'categoria', { unique: false });
+        objectStore.createIndex('status', 'status', { unique: false }); // Adiciona o índice para status
     };
 
     request.onsuccess = function (event) {
@@ -35,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function () {
             data: document.getElementById('data').value,
             prioridade: document.getElementById('prioridade').value,
             categoria: document.getElementById('categoria').value,
-            status: 'pendente' // Tarefa iniciará como pendente
+            status: 'pendente' 
         };
 
         const transaction = db.transaction(['tarefas'], 'readwrite');
@@ -72,7 +73,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     <h5 class="mb-1 ${tarefa.prioridade ? `prioridade-${tarefa.prioridade}` : ''}">${tarefa.titulo}</h5>
                     <p class="mb-1">${tarefa.descricao}</p>
                     <small>Data: ${tarefa.data ? tarefa.data : 'Sem data'}</small> 
-                    <small>Categoria: <span class="badge badge-pill badge-primary">${tarefa.categoria}</span></small> <div class="acoes">
+                    <small>Categoria: <span class="badge badge-pill badge-primary">${tarefa.categoria}</span></small> 
+                    <small>Status: <span class="badge badge-pill ${tarefa.status === 'pendente' ? 'badge-danger status-pendente' : 'badge-success status-encerrada'}">${tarefa.status}</span></small> 
+                    <div class="acoes">
                     <i class="fas fa-edit"></i> 
                     <i class="fas fa-trash-alt" data-tarefa-id="${tarefa.id}"></i> 
                     </div>
@@ -91,7 +94,6 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         };
     }
-
 
     //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -203,12 +205,17 @@ document.addEventListener('DOMContentLoaded', function () {
             const tituloElemento = listItem.querySelector('h5');
             const descricaoElemento = listItem.querySelector('p');
             const dataElemento = listItem.querySelector('small');
+            const statusElemento = listItem.querySelector('.status-pendente');
 
             tituloElemento.textContent = tarefa.titulo;
             tituloElemento.className = `mb-1 ${tarefa.prioridade ? `prioridade-${tarefa.prioridade}` : ''}`; // Atualiza a classe de prioridade
 
             descricaoElemento.textContent = tarefa.descricao;
             dataElemento.textContent = `Data: ${tarefa.data ? tarefa.data : 'Sem data'}`;
+
+            // Atualizar o status da tarefa
+            statusElemento.className = `badge badge-pill ${tarefa.status === 'pendente' ? 'badge-danger status-pendente' : 'badge-success status-encerrada'}`;
+            statusElemento.textContent = tarefa.status;
 
             // Atualizar a classe da categoria
             listItem.className = `list-group-item categoria-${tarefa.categoria}`;
@@ -218,9 +225,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-
     //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
 
     function excluirTarefa(event) {
         const tarefaId = parseInt(event.target.dataset.tarefaId);
