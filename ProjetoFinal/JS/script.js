@@ -80,6 +80,11 @@ document.addEventListener('DOMContentLoaded', () => {
             li.innerHTML = ''; // Limpa o conteúdo HTML existente antes de adicionar o novo
             // Criar elemento para o ícone de status
             const iconeStatus = document.createElement('i');
+
+            // Task Card Structure
+            const taskCard = document.createElement('div');
+            taskCard.classList.add('task-card', tarefa.prioridade); // Add priority as a class
+
             if (tarefa.status === 'pendente') {
                 iconeStatus.classList.add('fas', 'fa-clock', 'pendente'); // Ícone de relógio para pendente
             } else {
@@ -88,14 +93,17 @@ document.addEventListener('DOMContentLoaded', () => {
             li.appendChild(iconeStatus); // Adicionar o ícone ao li
 
             // Adicione o span e os botões usando innerHTML
-            li.innerHTML += `
-                <span>${tarefa.titulo} - ${tarefa.data} - ${tarefa.prioridade} - ${tarefa.categoria}</span>
-                <div>
-                    <button class="editar" data-index="${index}">Editar</button>
-                    <button class="concluir" data-index="${index}">Concluir</button>
-                    <button class="excluir" data-index="${index}">Excluir</button>
-                </div>
-            `;
+            taskCard.innerHTML += `
+                <span class="titulo">${tarefa.titulo}</span>
+                <span class="data">${tarefa.data}</span>
+                <span class="categoria">${tarefa.categoria}</span> 
+                <span class="descricao">${tarefa.descricao}</span> <div>
+                <button class="editar" data-index="${index}">Editar</button>
+                <button class="concluir" data-index="${index}">Concluir</button>
+                <button class="excluir" data-index="${index}">Excluir</button>
+            </div>
+            `; 
+            li.appendChild(taskCard)
 
             // Adicionar a tarefa à coluna correta
             if (tarefa.categoria === 'Pessoal') {

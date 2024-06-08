@@ -9,25 +9,42 @@ body {
 header {
     background-color: #333;
     color: #fff;
-    text-align: center;
-    padding: 1em 0;
-    display: flex; /* Adicionando flexbox para o header */
-    justify-content: space-between; /* Distribuir espaço entre o título e o usuário */
-    align-items: center; /* Alinhar verticalmente */
+    padding: 1em;
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
 }
 
-.title {
+/* Styles for smaller screens (add more breakpoints as needed) */
+@media (max-width: 600px) { /* Adjust breakpoint as necessary */
+    header {
+        flex-direction: column; /* Stack logo and user info */
+        text-align: center; /* Center content */
+    }
+
+    header .logo, 
+    header .user {
+        margin-bottom: 10px; /* Add space between stacked elements */
+    }
+
+    header .user svg {
+        display: block; /* Make the SVG a block element for better spacing */
+        margin: 0 auto 5px; /* Center the SVG */
+    }
+}
+
+.logo {
     margin-left: 100px;
 }
 
-header .usuario svg {
+header .user svg {
     width: 1.5em;
     height: 1.5em;
     vertical-align: middle;
     margin-right: 0.5em; /* Espaçamento entre o ícone e o nome */
 }
 
-header .usuario {
+header .user {
     display: flex; /* Adicionando flexbox para o usuário */
     align-items: center; /* Alinhar verticalmente */
     margin-right: 60px; /* Espaçamento à direita */
@@ -154,3 +171,47 @@ footer {
     text-decoration: none;
     cursor: pointer;
 }
+
+/* Task Card */
+.task-card {
+    background-color: #fff;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+    position: relative; /* To position priority indicator */
+  }
+  
+  .task-card span { /* Target the task details inside the card */
+    display: block; /* To control width and wrapping */ 
+  }
+  
+  /* Hide description (or other details) by default on smaller screens */
+  @media (max-width: 600px) { 
+    .task-card .descricao { 
+      display: none; 
+    }
+  }
+  
+  /* Priority Indicators */
+  .task-card::before { 
+    content: ''; 
+    position: absolute;
+    top: 0; 
+    left: 0; 
+    width: 5px;
+    height: 100%;
+    border-radius: 8px 0 0 8px; /* Rounded top-left corner */
+  }
+  
+  .task-card.Alta::before {
+    background-color: #ff4d4d; /* Red for high */
+  }
+  
+  .task-card.Média::before {
+    background-color: #ffcc00; /* Yellow for medium */
+  }
+  
+  .task-card.Baixa::before {
+    background-color: #4caf50; /* Green for low */
+  }
