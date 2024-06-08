@@ -1,183 +1,236 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const formulario = document.getElementById('formulario-tarefa');
-    const listaPessoal = document.getElementById('lista-tarefas-pessoal');
-    const listaProfissional = document.getElementById('lista-tarefas-profissional');
-    const listaAcademica = document.getElementById('lista-tarefas-academica');
+document.addEventListener('DOMContentLoaded', function () {
+    let db;
+    const formTarefa = document.getElementById('form-tarefa');
+    const listaTarefas = document.getElementById('lista-tarefas');
 
-    // Controles do Modal (Pop-up)
-    const modal = document.getElementById("modal-tarefa");
-    const btnAbrirModal = document.getElementById("abrir-modal");
-    const btnFecharModal = document.querySelector(".fechar-modal");
+    // Inicializar o IndexedDB
+    const request = indexedDB.open('gerenciadorTarefas', 1);
 
-    let tarefas = []; // Array para armazenar as tarefas
-    let indiceEdicao = null;
+    request.onerror = function (event) {
+        console.error('Erro ao abrir o IndexedDB:', event.target.errorCode);
+    };
 
-    // Abrir o modal
-    btnAbrirModal.addEventListener("click", () => {
-        modal.style.display = "block";
-    });
+    request.onupgradeneeded = function (event) {
+        db = event.target.result;
+        const objectStore = db.createObjectStore('tarefas', { keyPath: 'id', autoIncrement: true });
+        objectStore.createIndex('titulo', 'titulo', { unique: false });
+        objectStore.createIndex('data', 'data', { unique: false });
+        objectStore.createIndex('prioridade', 'prioridade', { unique: false });
+        objectStore.createIndex('categoria', 'categoria', { unique: false });
+    };
 
-    // Fechar o modal
-    btnFecharModal.addEventListener("click", () => {
-        modal.style.display = "none";
-    });
+    request.onsuccess = function (event) {
+        db = event.target.result;
+        carregarTarefas();
+    };
 
-    // Fechar o modal ao clicar fora do conteúdo
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
-    }
+    formTarefa.addEventListener('submit', adicionarTarefa);
 
-    // Carregar tarefas do localStorage (se houver)
-    carregarTarefas();
-
-    // Event Listener para adicionar nova tarefa
-    formulario.addEventListener('submit', (event) => {
+    function adicionarTarefa(event) {
         event.preventDefault();
 
-        if (indiceEdicao !== null) {
-            // Editar tarefa existente
-            tarefas[indiceEdicao] = {
-                titulo: document.getElementById('titulo').value,
-                descricao: document.getElementById('descricao').value,
-                data: document.getElementById('data').value,
-                prioridade: document.getElementById('prioridade').value,
-                categoria: document.getElementById('categoria').value,
-                status: tarefas[indiceEdicao].status // Manter o status original
-            };
-            indiceEdicao = null; // Limpar o índice após a edição
-            document.getElementById('btn-adicionar').textContent = 'Adicionar Tarefa';
-        } else {
-            // Adicionar nova tarefa 
-            const novaTarefa = {
-                titulo: document.getElementById('titulo').value,
-                descricao: document.getElementById('descricao').value,
-                data: document.getElementById('data').value,
-                prioridade: document.getElementById('prioridade').value,
-                categoria: document.getElementById('categoria').value,
-                status: 'pendente'
-            };
-            tarefas.push(novaTarefa);
-        }
+        const novaTarefa = {
+            titulo: document.getElementById('titulo').value,
+            descricao: document.getElementById('descricao').value,
+            data: document.getElementById('data').value,
+            prioridade: document.getElementById('prioridade').value,
+            categoria: document.getElementById('categoria').value,
+            status: 'pendente' // Tarefa iniciará como pendente
+        };
 
-        salvarTarefas();
-        renderizarTarefas();
-        formulario.reset();
-        modal.style.display = "none"; // Fechar o modal após adicionar/editar
-    });
+        const transaction = db.transaction(['tarefas'], 'readwrite');
+        const objectStore = transaction.objectStore('tarefas');
+        const request = objectStore.add(novaTarefa);
 
-    // Função para renderizar tarefas na lista
-    function renderizarTarefas() {
-        // Limpar as listas antes de renderizar
-        listaPessoal.innerHTML = '';
-        listaProfissional.innerHTML = '';
-        listaAcademica.innerHTML = '';
+        request.onsuccess = function () {
+            formTarefa.reset();
+            carregarTarefas();
+        };
 
-        tarefas.forEach((tarefa, index) => {
-            const li = document.createElement('li');
-
-            li.innerHTML = ''; // Limpa o conteúdo HTML existente antes de adicionar o novo
-            // Criar elemento para o ícone de status
-            const iconeStatus = document.createElement('i');
-
-            // Task Card Structure
-            const taskCard = document.createElement('div');
-            taskCard.classList.add('task-card', tarefa.prioridade); // Add priority as a class
-
-            if (tarefa.status === 'pendente') {
-                iconeStatus.classList.add('fas', 'fa-clock', 'pendente'); // Ícone de relógio para pendente
-            } else {
-                iconeStatus.classList.add('fas', 'fa-check-circle', 'concluida'); // Ícone de círculo com check para concluída
-            }
-            li.appendChild(iconeStatus); // Adicionar o ícone ao li
-
-            // Adicione o span e os botões usando innerHTML
-            taskCard.innerHTML += `
-                <span class="titulo">${tarefa.titulo}</span>
-                <span class="data">${tarefa.data}</span>
-                <span class="categoria">${tarefa.categoria}</span> 
-                <span class="descricao">${tarefa.descricao}</span> <div>
-                <button class="editar" data-index="${index}">Editar</button>
-                <button class="concluir" data-index="${index}">Concluir</button>
-                <button class="excluir" data-index="${index}">Excluir</button>
-            </div>
-            `; 
-            li.appendChild(taskCard)
-
-            // Adicionar a tarefa à coluna correta
-            if (tarefa.categoria === 'Pessoal') {
-                listaPessoal.appendChild(li);
-            } else if (tarefa.categoria === 'Profissional') {
-                listaProfissional.appendChild(li);
-            } else if (tarefa.categoria === 'Acadêmica') {
-                listaAcademica.appendChild(li);
-            }
-
-            // Adicionar classe para destacar tarefas próximas e urgentes
-            const hoje = new Date();
-            const dataTarefa = new Date(tarefa.data);
-            const diffTempo = dataTarefa.getTime() - hoje.getTime();
-            const diffDias = Math.ceil(diffTempo / (1000 * 3600 * 24));
-
-            if (diffDias <= 3 && diffDias > 0) {
-                li.classList.add("proxima");
-            } else if (diffDias < 0) {
-                li.classList.add("urgente");
-            }
-
-            // Adicionar evento de clique nos botões de editar, concluir e excluir
-            adicionarEventosBotoes(li, index);
-        });
+        request.onerror = function (event) {
+            console.error('Erro ao adicionar tarefa:', event.target.error);
+        };
     }
 
-    // Função para adicionar eventos aos botões de editar, concluir e excluir
-    function adicionarEventosBotoes(li, index) {
-        const btnEditar = li.querySelector('.editar');
-        const btnConcluir = li.querySelector('.concluir');
-        const btnExcluir = li.querySelector('.excluir');
-
-        btnEditar.addEventListener('click', () => {
-            indiceEdicao = index;
-
-            // Preencher o formulário com os dados da tarefa
-            document.getElementById('titulo').value = tarefas[index].titulo;
-            document.getElementById('descricao').value = tarefas[index].descricao;
-            document.getElementById('data').value = tarefas[index].data;
-            document.getElementById('prioridade').value = tarefas[index].prioridade;
-            document.getElementById('categoria').value = tarefas[index].categoria;
-
-            // Abrir o modal de edição
-            modal.style.display = "block"; 
-
-            // Alterar texto do botão para "Salvar Edição"
-            document.getElementById('btn-adicionar').textContent = 'Salvar Edição';
-        });
-
-        btnConcluir.addEventListener('click', () => {
-            tarefas[index].status = (tarefas[index].status === 'pendente') ? 'concluida' : 'pendente';
-            salvarTarefas();
-            renderizarTarefas();
-        });
-
-        btnExcluir.addEventListener('click', () => {
-            tarefas.splice(index, 1);
-            salvarTarefas();
-            renderizarTarefas();
-        });
-    }
-
-    // Função para salvar as tarefas no localStorage
-    function salvarTarefas() {
-        localStorage.setItem('tarefas', JSON.stringify(tarefas));
-    }
-
-    // Função para carregar as tarefas do localStorage
     function carregarTarefas() {
-        const tarefasSalvas = localStorage.getItem('tarefas');
-        if (tarefasSalvas) {
-            tarefas = JSON.parse(tarefasSalvas);
-            renderizarTarefas();
+        listaTarefas.innerHTML = '';
+
+        const transaction = db.transaction(['tarefas'], 'readonly');
+        const objectStore = transaction.objectStore('tarefas');
+        const request = objectStore.getAll();
+
+        request.onsuccess = function (event) {
+            const tarefas = event.target.result;
+
+            tarefas.forEach(tarefa => {
+                const listItem = document.createElement('div');
+                listItem.classList.add('list-group-item', `categoria-${tarefa.categoria}`);
+
+                // Adicionando informações da tarefa
+                listItem.innerHTML = `
+            <div>
+              <h5 class="mb-1 ${tarefa.prioridade ? `prioridade-${tarefa.prioridade}` : ''}">${tarefa.titulo}</h5>
+              <p class="mb-1">${tarefa.descricao}</p>
+              <small>Data: ${tarefa.data ? tarefa.data : 'Sem data'}</small> 
+            </div>
+            <div class="acoes">
+              <i class="fas fa-edit"></i> 
+              <i class="fas fa-trash-alt" data-tarefa-id="${tarefa.id}"></i> 
+            </div>
+          `;
+
+                listaTarefas.appendChild(listItem);
+
+                // Adicionar evento de click no ícone de edição
+                const iconeEditar = listItem.querySelector('.fa-edit');
+                iconeEditar.addEventListener('click', abrirModalEditarTarefa);
+
+                // Adicionar evento de click no ícone de lixeira (excluir)
+                const iconeExcluir = listItem.querySelector('.fa-trash-alt');
+                iconeExcluir.addEventListener('click', excluirTarefa);
+            });
+        };
+    }
+
+
+    //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    function buscarTarefaPorId(id) {
+        let tarefaEncontrada = null; 
+      
+        const transaction = db.transaction(['tarefas'], 'readonly');
+        const objectStore = transaction.objectStore('tarefas');
+      
+        // Usando get() para buscar por chave primária (ID)
+        const request = objectStore.get(id);
+      
+        request.onsuccess = function(event) {
+          tarefaEncontrada = event.target.result;
+        };
+      
+        request.onerror = function(event) {
+          console.error('Erro ao buscar tarefa:', event.target.error);
+        };
+      
+        // A transação é assíncrona, então precisamos retornar a tarefaEncontrada
+        // após a conclusão da transação. Uma solução é usar uma Promise:
+        return new Promise((resolve, reject) => {
+          transaction.oncomplete = function() {
+            resolve(tarefaEncontrada);
+          };
+      
+          transaction.onerror = function(event) {
+            reject(event.target.error);
+          };
+        });
+      }
+
+    function abrirModalEditarTarefa(event) {
+        const listItem = event.target.parentNode.parentNode;
+        const tarefaId = parseInt(listItem.querySelector('.fa-trash-alt').dataset.tarefaId);
+
+        // Função para buscar a tarefa no IndexedDB pelo ID
+        buscarTarefaPorId(tarefaId)
+            .then(tarefa => {
+                if (tarefa) {
+                    // Preencher o modal APENAS depois que a Promise for resolvida
+                    document.getElementById('editar-id-tarefa').value = tarefa.id;
+                    document.getElementById('editar-titulo').value = tarefa.titulo;
+                    document.getElementById('editar-descricao').value = tarefa.descricao;
+                    document.getElementById('editar-data').value = tarefa.data;
+                    document.getElementById('editar-prioridade').value = tarefa.prioridade;
+                    document.getElementById('editar-categoria').value = tarefa.categoria;
+
+                    // Abrir o modal
+                    $('#modalEditarTarefa').modal('show');
+                } else {
+                    console.error('Tarefa não encontrada.');
+                    // Lidar com o caso em que a tarefa não é encontrada 
+                }
+            })
+            .catch(error => {
+                console.error('Erro ao buscar tarefa:', error);
+                // Lidar com o erro
+            });
+    }
+
+    // Adicionar evento de submit ao formulário de edição
+    const formEditarTarefa = document.getElementById('form-editar-tarefa');
+    formEditarTarefa.addEventListener('submit', editarTarefa);
+
+    function editarTarefa(event) {
+        event.preventDefault();
+
+        const tarefaId = parseInt(document.getElementById('editar-id-tarefa').value);
+
+        // Obter os valores atualizados do formulário de edição
+        const tarefaAtualizada = {
+            id: tarefaId,
+            titulo: document.getElementById('editar-titulo').value,
+            descricao: document.getElementById('editar-descricao').value,
+            data: document.getElementById('editar-data').value,
+            prioridade: document.getElementById('editar-prioridade').value,
+            categoria: document.getElementById('editar-categoria').value,
+            // ... outros campos que você quer atualizar
+        };
+
+        // Atualizar a tarefa no IndexedDB
+        const transaction = db.transaction(['tarefas'], 'readwrite');
+        const objectStore = transaction.objectStore('tarefas');
+        const request = objectStore.put(tarefaAtualizada);
+
+        request.onsuccess = function () {
+            // Fechar o modal
+            $('#modalEditarTarefa').modal('hide');
+
+            // Atualizar a lista de tarefas na interface do usuário
+            atualizarTarefaNaLista(tarefaAtualizada);
+        };
+
+        request.onerror = function (event) {
+            console.error('Erro ao atualizar tarefa:', event.target.error);
+        };
+    }
+
+    // Função para atualizar a tarefa na lista da interface do usuário
+    function atualizarTarefaNaLista(tarefa) {
+        // Encontrar o item da lista (listItem) pelo ID da tarefa
+        const listItem = document.querySelector(`#lista-tarefas .list-group-item:has([data-tarefa-id="${tarefa.id}"])`);
+
+        // Verificar se o elemento foi encontrado
+        if (listItem) {
+            // Atualizar o conteúdo do item da lista
+            const tituloElemento = listItem.querySelector('h5');
+            const descricaoElemento = listItem.querySelector('p');
+            const dataElemento = listItem.querySelector('small');
+
+            tituloElemento.textContent = tarefa.titulo;
+            tituloElemento.className = `mb-1 ${tarefa.prioridade ? `prioridade-${tarefa.prioridade}` : ''}`; // Atualiza a classe de prioridade
+
+            descricaoElemento.textContent = tarefa.descricao;
+            dataElemento.textContent = `Data: ${tarefa.data ? tarefa.data : 'Sem data'}`;
+
+            // Atualizar a classe da categoria
+            listItem.className = `list-group-item categoria-${tarefa.categoria}`;
+        } else {
+            console.error('Item da lista não encontrado para atualização.');
+            // Lidar com o caso em que o item da lista não é encontrado (exibir mensagem de erro, etc.)
         }
+    }
+
+
+    //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+    function excluirTarefa(event) {
+        const tarefaId = parseInt(event.target.dataset.tarefaId);
+        const transaction = db.transaction(['tarefas'], 'readwrite');
+        const objectStore = transaction.objectStore('tarefas');
+        const request = objectStore.delete(tarefaId);
+
+        request.onsuccess = function () {
+            // Remover o item da lista 
+            event.target.parentNode.parentNode.remove();
+        };
     }
 });

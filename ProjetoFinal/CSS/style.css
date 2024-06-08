@@ -1,9 +1,74 @@
-/* Estilização geral da página */
 body {
     font-family: sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
+}
+
+.container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1, h3 {
+    text-align: center;
+}
+
+#form-tarefa label {
+    font-weight: bold;
+}
+
+#lista-tarefas .list-group-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Estilos para as diferentes categorias */
+.categoria-pessoal {
+    border-left: 5px solid #28a745; /* Verde */
+}
+
+.categoria-profissional {
+    border-left: 5px solid #007bff; /* Azul */
+}
+
+.categoria-academica {
+    border-left: 5px solid #ffc107; /* Amarelo */
+}
+
+/* Estilos para as diferentes prioridades */
+.prioridade-alta {
+    color: #dc3545; /* Vermelho */
+}
+
+.prioridade-media {
+    color: #ffc107; /* Amarelo */
+}
+
+.prioridade-baixa {
+    color: #28a745; /* Verde */
+}
+
+/* Estilos para tarefas próximas do prazo (a ser implementado com JavaScript) */
+.proximo-prazo {
+    background-color: #ffeeba; /* Amarelo claro */
+}
+
+/* Ícones para ações (editar, excluir) - usando Font Awesome (você precisa incluir a biblioteca) */
+.acoes i {
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.acoes .fa-edit {
+    color: #007bff; /* Azul */
+}
+
+.acoes .fa-trash-alt {
+    color: #dc3545; /* Vermelho */
 }
 
 header {
@@ -13,24 +78,6 @@ header {
     display: flex;
     justify-content: space-between; 
     align-items: center;
-}
-
-/* Styles for smaller screens (add more breakpoints as needed) */
-@media (max-width: 600px) { /* Adjust breakpoint as necessary */
-    header {
-        flex-direction: column; /* Stack logo and user info */
-        text-align: center; /* Center content */
-    }
-
-    header .logo, 
-    header .user {
-        margin-bottom: 10px; /* Add space between stacked elements */
-    }
-
-    header .user svg {
-        display: block; /* Make the SVG a block element for better spacing */
-        margin: 0 auto 5px; /* Center the SVG */
-    }
 }
 
 .logo {
@@ -50,69 +97,6 @@ header .user {
     margin-right: 60px; /* Espaçamento à direita */
 }
 
-main {
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-/* Estilização do formulário */
-#formulario-tarefa label {
-    display: block;
-    margin-bottom: 5px;
-}
-
-#formulario-tarefa input,
-#formulario-tarefa textarea,
-#formulario-tarefa select {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
-    border-radius: 4px;
-    border: 1px solid #ddd;
-}
-
-/* Estilização da lista de tarefas */
-#lista-tarefas li, 
-#lista-tarefas-pessoal li, 
-#lista-tarefas-profissional li, 
-#lista-tarefas-academica li { /* Estilos para todas as listas */
-    background-color: #eee;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 4px;
-    list-style: none;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    /* Estilos para os ícones de status DENTRO do LI */
-    .pendente {
-        color: #f0ad4e; /* Cor laranja para pendente */
-        margin-right: 5px; /* Espaçamento à direita */
-    }
-
-    .concluida {
-        color: #5cb85c; /* Cor verde para concluída */
-        margin-right: 5px; /* Espaçamento à direita */
-    }
-}
-
-.concluida {
-    text-decoration: line-through;
-    color: #999;
-}
-
-.proxima {
-    border-left: 5px solid orange;
-}
-
-.urgente {
-    border-left: 5px solid red;
-}
-
 footer {
     background-color: #333;
     color: #fff;
@@ -122,96 +106,3 @@ footer {
     bottom: 0;
     width: 100%;
 }
-
-/* Estilização das colunas */
-.colunas {
-    display: flex;
-    gap: 20px; /* Espaçamento entre as colunas */
-}
-
-.coluna {
-    flex: 1; /* Distribui o espaço igualmente entre as colunas */
-    border: 1px solid #ddd;
-    padding: 10px;
-    border-radius: 4px;
-}
-
-.modal {
-    display: none; 
-    position: fixed; 
-    z-index: 1; 
-    left: 0;
-    top: 0;
-    width: 100%; 
-    height: 100%; 
-    overflow: auto; 
-    background-color: rgba(0, 0, 0, 0.4); 
-}
-
-.conteudo-modal {
-    background-color: #fefefe;
-    margin: 10% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 30%;
-    position: relative;
-}
-
-.fechar-modal {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.fechar-modal:hover,
-.fechar-modal:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-/* Task Card */
-.task-card {
-    background-color: #fff;
-    padding: 15px;
-    margin-bottom: 10px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
-    position: relative; /* To position priority indicator */
-  }
-  
-  .task-card span { /* Target the task details inside the card */
-    display: block; /* To control width and wrapping */ 
-  }
-  
-  /* Hide description (or other details) by default on smaller screens */
-  @media (max-width: 600px) { 
-    .task-card .descricao { 
-      display: none; 
-    }
-  }
-  
-  /* Priority Indicators */
-  .task-card::before { 
-    content: ''; 
-    position: absolute;
-    top: 0; 
-    left: 0; 
-    width: 5px;
-    height: 100%;
-    border-radius: 8px 0 0 8px; /* Rounded top-left corner */
-  }
-  
-  .task-card.Alta::before {
-    background-color: #ff4d4d; /* Red for high */
-  }
-  
-  .task-card.Média::before {
-    background-color: #ffcc00; /* Yellow for medium */
-  }
-  
-  .task-card.Baixa::before {
-    background-color: #4caf50; /* Green for low */
-  }
