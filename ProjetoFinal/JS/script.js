@@ -68,16 +68,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // Adicionando informações da tarefa
                 listItem.innerHTML = `
-            <div>
-              <h5 class="mb-1 ${tarefa.prioridade ? `prioridade-${tarefa.prioridade}` : ''}">${tarefa.titulo}</h5>
-              <p class="mb-1">${tarefa.descricao}</p>
-              <small>Data: ${tarefa.data ? tarefa.data : 'Sem data'}</small> 
-            </div>
-            <div class="acoes">
-              <i class="fas fa-edit"></i> 
-              <i class="fas fa-trash-alt" data-tarefa-id="${tarefa.id}"></i> 
-            </div>
-          `;
+                <div>
+                    <h5 class="mb-1 ${tarefa.prioridade ? `prioridade-${tarefa.prioridade}` : ''}">${tarefa.titulo}</h5>
+                    <p class="mb-1">${tarefa.descricao}</p>
+                    <small>Data: ${tarefa.data ? tarefa.data : 'Sem data'}</small> 
+                    <small>Categoria: <span class="badge badge-pill badge-primary">${tarefa.categoria}</span></small> <div class="acoes">
+                    <i class="fas fa-edit"></i> 
+                    <i class="fas fa-trash-alt" data-tarefa-id="${tarefa.id}"></i> 
+                    </div>
+                </div>
+                `;
 
                 listaTarefas.appendChild(listItem);
 
