@@ -66,7 +66,7 @@
             </div>
             <div class="modal-body">
                 <!-- Seu texto sobre o projeto aqui -->
-                <p>Meu nome é "NOME" Está aplicação foi desenvolvida para a matéria de PWEB</p>
+                <p>Meu nome é "NOME" Está aplicação foi desenvolvida para a matéria de PWEB.</p>
             </div>
         </div>
     </div>
@@ -191,6 +191,30 @@
       </div>
     </div>
   </div>
+
+  <!-- Modal de confirmação de exclusão -->
+<div class="modal fade" id="modalConfirmarExclusao" tabindex="-1" role="dialog" aria-labelledby="modalConfirmarExclusaoLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalConfirmarExclusaoLabel">Confirmar Exclusão</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Tem certeza que deseja excluir a tarefa <strong><span id="titulo-tarefa-excluir"></span></strong>?</p>
+      </div>
+      <div class="modal-footer">
+        <form id="form-confirmar-exclusao">
+          <input type="hidden" id="tarefa-id-excluir">
+          <button type="submit" class="btn btn-danger">Excluir</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
   <!--Notificação para a tarefa-->
   <div id="notificacao" class="notificacao" style="display: none;">

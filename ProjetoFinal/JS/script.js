@@ -31,10 +31,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     formTarefa.addEventListener('submit', adicionarTarefa);
 
-
-
-
-
     const sidebar = document.getElementById('sidebar');
     const nomeUsuario = document.getElementById('nome-usuario');
     const iconeUsuario = nomeUsuario.querySelector('svg');
@@ -70,11 +66,6 @@ document.addEventListener('DOMContentLoaded', function () {
         $('#modalAbout').modal('show');
     });
 
-
-
-
-
-
     function adicionarTarefa(event) {
         event.preventDefault();
 
@@ -94,11 +85,25 @@ document.addEventListener('DOMContentLoaded', function () {
         request.onsuccess = function () {
             formTarefa.reset();
             carregarTarefas();
+
+            $('#modalAdicionarTarefa').modal('hide');
         };
 
         request.onerror = function (event) {
             console.error('Erro ao adicionar tarefa:', event.target.error);
         };
+    }
+
+    function formatarData(data, paraEdicao = false) {
+        if (!data) return "";
+      
+        const dataObj = new Date(data);
+        const dia = dataObj.getDate().toString().padStart(2, '0');
+        const mes = (dataObj.getMonth() + 1).toString().padStart(2, '0'); 
+        const ano = dataObj.getFullYear();
+      
+        // Retorna o formato correto com base no parâmetro 'paraEdicao'
+        return paraEdicao ? `${ano}-${mes}-${dia}` : `${dia}/${mes}/${ano}`; 
     }
 
     function carregarTarefas() {
@@ -120,7 +125,7 @@ document.addEventListener('DOMContentLoaded', function () {
               <div>
                 <h5 class="mb-1 ${tarefa.prioridade ? `prioridade-${tarefa.prioridade}` : ''}">${tarefa.titulo}</h5>
                 <p class="mb-1">${tarefa.descricao}</p>
-                <small>Data: ${tarefa.data ? tarefa.data : 'Sem data'}</small>
+                <small>Data: ${formatarData(tarefa.data)}</small>
                 <small>Categoria: <span class="badge badge-pill badge-primary">${tarefa.categoria}</span></small>
                 <small>Status: <span class="badge badge-pill ${tarefa.status === 'pendente' ? 'badge-danger status-pendente' : 'badge-success status-encerrada'}">${tarefa.status}</span></small>
                 <div class="acoes">
@@ -153,7 +158,7 @@ document.addEventListener('DOMContentLoaded', function () {
               const tarefaId = parseInt(this.dataset.tarefaId);
               concluirTarefa(tarefaId);
             });
-      
+
             // Verificar se a tarefa está dentro do prazo e se deve ser notificada
             const tempoRestante = calcularTempoRestante(tarefa.data);
             if (tempoRestante <= 5 && tempoRestante >= 0) {
@@ -241,7 +246,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     document.getElementById('editar-id-tarefa').value = tarefa.id;
                     document.getElementById('editar-titulo').value = tarefa.titulo;
                     document.getElementById('editar-descricao').value = tarefa.descricao;
-                    document.getElementById('editar-data').value = tarefa.data;
+                    document.getElementById('editar-data').value = formatarData(tarefa.data, true);
                     document.getElementById('editar-prioridade').value = tarefa.prioridade;
                     document.getElementById('editar-categoria').value = tarefa.categoria;
 
@@ -329,7 +334,7 @@ document.addEventListener('DOMContentLoaded', function () {
             tituloElemento.className = `mb-1 ${tarefa.prioridade ? `prioridade-${tarefa.prioridade}` : ''}`; // Atualiza a classe de prioridade
 
             descricaoElemento.textContent = tarefa.descricao;
-            dataElemento.textContent = `Data: ${tarefa.data ? tarefa.data : 'Sem data'}`;
+            dataElemento.textContent = `Data: ${formatarData(tarefa.data)}`;
 
             // Atualizar o status da tarefa
             statusElemento.className = `badge badge-pill ${tarefa.status === 'pendente' ? 'badge-danger status-pendente' : 'badge-success status-encerrada'}`;
@@ -407,8 +412,6 @@ document.addEventListener('DOMContentLoaded', function () {
             event.target.parentNode.parentNode.remove();
         };
     }
-
-
 
     function verificarPreferenciaNotificacao(tarefaId) {
         return new Promise((resolve, reject) => {
