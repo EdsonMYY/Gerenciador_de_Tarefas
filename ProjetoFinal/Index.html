@@ -9,136 +9,163 @@
     <link rel="stylesheet" href="CSS/style.css">
 </head>
 <body>
-    <header>
-        <div class="logo">
-            <h1>ManageCore</h1>
-        </div>
-        <div class="user">
-            <span id="nome-usuario">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                Username
-            </span>
-        </div>
-    </header>
+  <header>
+      <div class="logo">
+          <h1>ManageCore</h1>
+      </div>
+      <div class="user">
+          <span id="nome-usuario">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+              Username
+          </span>
+      </div>
+  </header>
 
-    <div class="container">
-        <div class="text-center mt-5"> 
-            <h1>Gerenciador de Tarefas</h1>
-            <button type="button" class="btn btn-primary mt-3" data-toggle="modal" data-target="#modalAdicionarTarefa">
-              <i class="fas fa-plus"></i> Adicionar Tarefa
-            </button>
-        </div>
+  <div class="container">
+      <div class="text-center mt-5"> 
+          <h1>Gerenciador de Tarefas</h1>
+          <button type="button" class="btn btn-primary mt-3" data-toggle="modal" data-target="#modalAdicionarTarefa">
+            <i class="fas fa-plus"></i> Adicionar Tarefa
+          </button>
+      </div>
 
-        <div class="row mt-4">
-            <div class="col-md-12">
-                <h3>Lista de Tarefas</h3>
-                <div class="list-group" id="lista-tarefas"></div>
+      <div class="row mt-4">
+          <div class="col-md-12">
+              <h3>Lista de Tarefas</h3>
+              <div class="list-group" id="lista-tarefas"></div>
+          </div>
+      </div>
+  </div>
+
+  <!-- Modal para adicionar Tarefa -->
+  <div class="modal fade" id="modalAdicionarTarefa" tabindex="-1" role="dialog" aria-labelledby="modalAdicionarTarefaLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalAdicionarTarefaLabel">Adicionar Tarefa</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="form-tarefa">
+              <div class="form-group">
+                  <label for="titulo">Título:</label>
+                  <input type="text" class="form-control" id="titulo" required>
+              </div>
+              <div class="form-group">
+                  <label for="descricao">Descrição:</label>
+                  <textarea class="form-control" id="descricao"></textarea>
+              </div>
+              <div class="form-group">
+                  <label for="data">Data de Vencimento:</label>
+                  <input type="date" class="form-control" id="data">
+              </div>
+              <div class="form-group">
+                  <label for="prioridade">Prioridade:</label>
+                  <select class="form-control" id="prioridade">
+                      <option value="baixa">Baixa</option>
+                      <option value="media">Média</option>
+                      <option value="alta">Alta</option>
+                  </select>
+              </div>
+              <div class="form-group">
+                  <label for="categoria">Categoria:</label>
+                  <select class="form-control" id="categoria">
+                      <option value="pessoal">Pessoal</option>
+                      <option value="profissional">Profissional</option>
+                      <option value="academica">Acadêmica</option>
+                  </select>
+              </div>
+              <button type="submit" class="btn btn-primary btn-block">Adicionar</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para editar Tarefa -->
+  <div class="modal fade" id="modalEditarTarefa" tabindex="-1" role="dialog" aria-labelledby="modalEditarTarefaLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalEditarTarefaLabel">Editar Tarefa</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="form-editar-tarefa">
+            <input type="hidden" id="editar-id-tarefa">
+            <div class="form-group">
+              <label for="editar-titulo">Título:</label>
+              <input type="text" class="form-control" id="editar-titulo" required>
             </div>
-        </div>
-    </div>
-
-    <!-- Modal para adicionar Tarefa -->
-    <div class="modal fade" id="modalAdicionarTarefa" tabindex="-1" role="dialog" aria-labelledby="modalAdicionarTarefaLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="modalAdicionarTarefaLabel">Adicionar Tarefa</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
-              <span aria-hidden="true">×</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <form id="form-tarefa">
-                <div class="form-group">
-                    <label for="titulo">Título:</label>
-                    <input type="text" class="form-control" id="titulo" required>
-                </div>
-                <div class="form-group">
-                    <label for="descricao">Descrição:</label>
-                    <textarea class="form-control" id="descricao"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="data">Data de Vencimento:</label>
-                    <input type="date" class="form-control" id="data">
-                </div>
-                <div class="form-group">
-                    <label for="prioridade">Prioridade:</label>
-                    <select class="form-control" id="prioridade">
-                        <option value="baixa">Baixa</option>
-                        <option value="media">Média</option>
-                        <option value="alta">Alta</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="categoria">Categoria:</label>
-                    <select class="form-control" id="categoria">
-                        <option value="pessoal">Pessoal</option>
-                        <option value="profissional">Profissional</option>
-                        <option value="academica">Acadêmica</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-primary btn-block">Adicionar</button>
-            </form>
-          </div>
+            <div class="form-group">
+              <label for="editar-descricao">Descrição:</label>
+              <textarea class="form-control" id="editar-descricao"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="editar-data">Data de Vencimento:</label>
+              <input type="date" class="form-control" id="editar-data">
+            </div>
+            <div class="form-group">
+              <label for="editar-prioridade">Prioridade:</label>
+              <select class="form-control" id="editar-prioridade">
+                <option value="baixa">Baixa</option>
+                <option value="media">Média</option>
+                <option value="alta">Alta</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="editar-categoria">Categoria:</label>
+              <select class="form-control" id="editar-categoria">
+                <option value="pessoal">Pessoal</option>
+                <option value="profissional">Profissional</option>
+                <option value="academica">Acadêmica</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Salvar Alterações</button>
+          </form>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- Modal para editar Tarefa -->
-    <div class="modal fade" id="modalEditarTarefa" tabindex="-1" role="dialog" aria-labelledby="modalEditarTarefaLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="modalEditarTarefaLabel">Editar Tarefa</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
-              <span aria-hidden="true">×</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <form id="form-editar-tarefa">
-              <input type="hidden" id="editar-id-tarefa">
-              <div class="form-group">
-                <label for="editar-titulo">Título:</label>
-                <input type="text" class="form-control" id="editar-titulo" required>
-              </div>
-              <div class="form-group">
-                <label for="editar-descricao">Descrição:</label>
-                <textarea class="form-control" id="editar-descricao"></textarea>
-              </div>
-              <div class="form-group">
-                <label for="editar-data">Data de Vencimento:</label>
-                <input type="date" class="form-control" id="editar-data">
-              </div>
-              <div class="form-group">
-                <label for="editar-prioridade">Prioridade:</label>
-                <select class="form-control" id="editar-prioridade">
-                  <option value="baixa">Baixa</option>
-                  <option value="media">Média</option>
-                  <option value="alta">Alta</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="editar-categoria">Categoria:</label>
-                <select class="form-control" id="editar-categoria">
-                  <option value="pessoal">Pessoal</option>
-                  <option value="profissional">Profissional</option>
-                  <option value="academica">Acadêmica</option>
-                </select>
-              </div>
-              <button type="submit" class="btn btn-primary btn-block">Salvar Alterações</button>
-            </form>
-          </div>
+  <!-- Modal para visualizar Tarefa -->
+  <div class="modal fade" id="modalVisualizarTarefa" tabindex="-1" role="dialog" aria-labelledby="modalVisualizarTarefaLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalVisualizarTarefaLabel">Detalhes da Tarefa</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p><strong>Título:</strong> <span id="visualizar-titulo"></span></p>
+          <p><strong>Descrição:</strong> <span id="visualizar-descricao"></span></p>
+          <p><strong>Data de Vencimento:</strong> <span id="visualizar-data"></span></p>
+          <p><strong>Prioridade:</strong> <span id="visualizar-prioridade"></span></p>
+          <p><strong>Categoria:</strong> <span id="visualizar-categoria"></span></p>
+          <p><strong>Status:</strong> <span id="visualizar-status"></span></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
         </div>
       </div>
     </div>
+  </div>
 
+  <div class="bottom-footer">
     <footer>
-        <p>© 2024 ManageCore - Todos os Direitos Reservados</p>
+      <p>© 2024 ManageCore - Todos os Direitos Reservados</p>
     </footer>
+  </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="JS/script.js"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="JS/script.js"></script>
 </body>
 </html>

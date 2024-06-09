@@ -67,8 +67,26 @@ h1, h3 {
     color: #007bff; /* Azul */
 }
 
+.acoes .fa-edit:hover {
+    color: #0050a7; /* Azul */
+}
+
 .acoes .fa-trash-alt {
     color: #dc3545; /* Vermelho */
+}
+
+.acoes .fa-trash-alt:hover {
+    color: #801e28; /* Vermelho */
+}
+
+.acoes .fa-check-square {
+    cursor: pointer;    /* Torna o ícone clicável */
+    color: #28a745;   /* Define a cor do ícone (verde neste caso) */
+    margin-left: 10px; /* Adiciona um espaçamento à esquerda */
+}
+  
+.acoes .fa-check-square:hover {
+    color: #1e7e34;   /* Cor mais escura no hover */
 }
 
 /* Estilos para o status da tarefa */
@@ -80,6 +98,8 @@ h1, h3 {
 
 .status-encerrada {
     color: #28a745; /* Verde para encerrada */
+    background-color: #28a745;
+    color: white;
 }
 
 header {
@@ -89,6 +109,7 @@ header {
     display: flex;
     justify-content: space-between; 
     align-items: center;
+    width: 100%;
 }
 
 .logo {
@@ -108,15 +129,32 @@ header .user {
     margin-right: 60px; /* Espaçamento à direita */
 }
 
+.bottom-footer {
+    margin-top: 80px;
+    position:relative;
+    
+}
+
 footer {
     background-color: #333;
     color: #fff;
     text-align: center;
     padding: 1em 0;
     bottom: 0;
+    position:fixed;
     width: 100%;
 }
 
 #lista-tarefas .badge {
     margin-left: 10px; /* Espaçamento à esquerda */
-  }
+}
+
+.list-group-item.hoverable:hover {
+    background-color: #f0f0f0; /* Cor de fundo mais escura no hover */
+    cursor: pointer;         /* Muda o cursor para uma mãozinha */
+}
+
+.status-concluido {
+    text-decoration: line-through; /* Adiciona uma linha riscando o texto */
+    color: gray;                  /* Muda a cor do texto para cinza */
+}

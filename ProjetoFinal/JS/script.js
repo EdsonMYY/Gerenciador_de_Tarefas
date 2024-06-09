@@ -67,22 +67,62 @@ document.addEventListener('DOMContentLoaded', function () {
                 const listItem = document.createElement('div');
                 listItem.classList.add('list-group-item', `categoria-${tarefa.categoria}`);
 
+                listItem.classList.add('hoverable');
+
+                listItem.id = `tarefa-${tarefa.id}`; // Usando o ID da tarefa para garantir a unicidade
+
+
+
                 // Adicionando informações da tarefa
                 listItem.innerHTML = `
-                <div>
-                    <h5 class="mb-1 ${tarefa.prioridade ? `prioridade-${tarefa.prioridade}` : ''}">${tarefa.titulo}</h5>
-                    <p class="mb-1">${tarefa.descricao}</p>
-                    <small>Data: ${tarefa.data ? tarefa.data : 'Sem data'}</small> 
-                    <small>Categoria: <span class="badge badge-pill badge-primary">${tarefa.categoria}</span></small> 
-                    <small>Status: <span class="badge badge-pill ${tarefa.status === 'pendente' ? 'badge-danger status-pendente' : 'badge-success status-encerrada'}">${tarefa.status}</span></small> 
-                    <div class="acoes">
-                    <i class="fas fa-edit"></i> 
-                    <i class="fas fa-trash-alt" data-tarefa-id="${tarefa.id}"></i> 
+                    <div>
+                        <h5 class="mb-1 ${tarefa.prioridade ? `prioridade-${tarefa.prioridade}` : ''}">${tarefa.titulo}</h5>
+                        <p class="mb-1">${tarefa.descricao}</p>
+                        <small>Data: ${tarefa.data ? tarefa.data : 'Sem data'}</small>
+                        <small>Categoria: <span class="badge badge-pill badge-primary">${tarefa.categoria}</span></small>
+                        <small>Status: <span class="badge badge-pill ${tarefa.status === 'pendente' ? 'badge-danger status-pendente' : 'badge-success status-encerrada'}">${tarefa.status}</span></small>
+                        <div class="acoes">
+                            <i class="fas fa-edit"></i> 
+                            <i class="fas fa-trash-alt" data-tarefa-id="${tarefa.id}"></i> 
+                            <i class="fas fa-check-square" data-tarefa-id="${tarefa.id}"></i> </div>
                     </div>
-                </div>
                 `;
 
+
+                const iconesAcao = listItem.querySelectorAll('.acoes i');
+                iconesAcao.forEach(icone => {
+                    icone.addEventListener('click', function(event) {
+                        event.stopPropagation(); // Impede a propagação do evento de clique
+                    });
+                });
+
+
+                listItem.addEventListener('click', function(event) {
+                    // Verificar se o clique não foi nos ícones de ação
+                    if (event.target.classList.contains('fa-edit') || event.target.classList.contains('fa-trash-alt')) {
+                        return; // Não faz nada se o clique foi em um ícone de ação
+                    }
+            
+                    // Preencher o modal de visualização com os dados da tarefa
+                    document.getElementById('visualizar-titulo').textContent = tarefa.titulo;
+                    document.getElementById('visualizar-descricao').textContent = tarefa.descricao;
+                    document.getElementById('visualizar-data').textContent = tarefa.data ? tarefa.data : 'Sem data';
+                    document.getElementById('visualizar-prioridade').textContent = tarefa.prioridade;
+                    document.getElementById('visualizar-categoria').textContent = tarefa.categoria;
+                    document.getElementById('visualizar-status').textContent = tarefa.status;
+            
+                    // Abrir o modal de visualização
+                    $('#modalVisualizarTarefa').modal('show');
+                });
+
                 listaTarefas.appendChild(listItem);
+
+                // Icone para conluir a tarefa
+                const botaoConcluir = listItem.querySelector('.fa-check-square');
+                botaoConcluir.addEventListener('click', function() {
+                    const tarefaId = parseInt(this.dataset.tarefaId);
+                    concluirTarefa(tarefaId);
+                });
 
                 // Adicionar evento de click no ícone de edição
                 const iconeEditar = listItem.querySelector('.fa-edit');
@@ -94,8 +134,6 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         };
     }
-
-    //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
     function buscarTarefaPorId(id) {
         let tarefaEncontrada = null; 
@@ -225,7 +263,39 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    function concluirTarefa(tarefaId) {
+        const transaction = db.transaction(['tarefas'], 'readwrite');
+        const objectStore = transaction.objectStore('tarefas');
+
+        // Obter a tarefa do IndexedDB
+        const request = objectStore.get(tarefaId);
+
+        request.onsuccess = function(event) {
+            const tarefa = event.target.result;
+
+            // Verificar se a tarefa foi encontrada
+            if (tarefa) {
+                // Atualizar o status da tarefa
+                tarefa.status = 'concluido';
+
+                // Atualizar a tarefa no IndexedDB
+                const requestUpdate = objectStore.put(tarefa);
+
+                requestUpdate.onsuccess = function() {
+                    // Atualizar a interface do usuário
+                    // (Você pode querer adicionar lógica aqui para mudar a aparência da tarefa na lista, 
+                    // por exemplo, riscando o texto ou mudando a cor)
+
+                    // Exemplo: Mudando a classe do status na interface do usuário
+                    const listItem = document.querySelector(`#lista-tarefas [data-tarefa-id="${tarefaId}"]`).parentNode.parentNode;
+                    const statusElemento = listItem.querySelector('.status-pendente, .status-encerrada'); 
+                    statusElemento.classList.remove('badge-danger', 'status-pendente'); 
+                    statusElemento.classList.add('badge-success', 'status-encerrada');
+                    statusElemento.textContent = 'concluido';
+                }
+            }
+        };
+    }
 
     function excluirTarefa(event) {
         const tarefaId = parseInt(event.target.dataset.tarefaId);
