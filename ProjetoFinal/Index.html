@@ -37,6 +37,41 @@
       </div>
   </div>
 
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-header">
+        <div class="user-info">
+            <span id="nome-usuario-sidebar">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                Username
+            </span>
+        </div>
+        <button id="close-sidebar" class="close-sidebar">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    <ul class="sidebar-menu">
+          <li class="button-sidebar-menu"><a id="about-button" class="area-btn-sidebar-menu"><span class="txt-btn-sidebar-menu">Saiba mais</span></a></li>
+    </ul>
+ </aside>
+
+  <!-- Modal About -->
+  <div class="modal fade" id="modalAbout" tabindex="-1" role="dialog" aria-labelledby="modalAboutLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalAboutLabel">About</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Seu texto sobre o projeto aqui -->
+                <p>Meu nome é "NOME" Está aplicação foi desenvolvida para a matéria de PWEB</p>
+            </div>
+        </div>
+    </div>
+  </div>
+
   <!-- Modal para adicionar Tarefa -->
   <div class="modal fade" id="modalAdicionarTarefa" tabindex="-1" role="dialog" aria-labelledby="modalAdicionarTarefaLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -155,6 +190,17 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <!--Notificação para a tarefa-->
+  <div id="notificacao" class="notificacao" style="display: none;">
+    <h3 id="titulo-notificacao">Aviso!</h3>
+    <p id="notificacao-mensagem"></p>
+    <div class="opcoes-notificacao">
+      <input type="checkbox" id="nao-notificar-novamente">
+      <label for="nao-notificar-novamente">Não notificar novamente</label>
+    </div>
+    <button id="fechar-notificacao">Fechar</button>
   </div>
 
   <div class="bottom-footer">

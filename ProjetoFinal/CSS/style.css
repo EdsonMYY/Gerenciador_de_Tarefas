@@ -129,6 +129,11 @@ header .user {
     margin-right: 60px; /* Espaçamento à direita */
 }
 
+#nome-usuario, 
+#nome-usuario svg {
+  cursor: pointer;
+}
+
 .bottom-footer {
     margin-top: 80px;
     position:relative;
@@ -157,4 +162,130 @@ footer {
 .status-concluido {
     text-decoration: line-through; /* Adiciona uma linha riscando o texto */
     color: gray;                  /* Muda a cor do texto para cinza */
+}
+
+.notificacao {
+    position: fixed;
+    /* Centralizar na tela */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); 
+  
+    background-color: #f8f9fa;
+    border: 1px solid #ced4da;
+    padding: 20px; /* Aumentei um pouco o padding */
+    border-radius: 8px; /* Bordas mais arredondadas */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Sombra mais suave */
+    z-index: 10; 
+}
+  
+.opcoes-notificacao {
+    margin-top: 10px;
+    display: flex; /* Ativa o Flexbox */
+    align-items: center; /* Alinha os itens verticalmente */ 
+}
+
+.opcoes-notificacao input[type="checkbox"] { 
+    margin-right: 8px;    /* Adiciona espaço entre o checkbox e o label */
+}
+  
+.opcoes-notificacao label {
+    margin-top: 10px;
+    line-height: 1;      /* Ajusta a altura da linha do label para melhor alinhamento */
+}
+  
+.notificacao h3 { /* Se você adicionar um título à notificação */
+    color: #343a40; /* Cor de texto escura */
+}
+  
+.notificacao p {
+    margin-bottom: 10px; 
+}
+  
+#fechar-notificacao {
+    background-color: transparent; /* Remover cor de fundo do botão */
+    border: none;                /* Remover borda do botão */
+    padding: 5px 10px;            /* Ajustar espaçamento interno do botão */
+    cursor: pointer;              /* Tornar o cursor uma mãozinha */
+}
+  
+#fechar-notificacao:hover {
+    text-decoration: underline;   /* Sublinhar o texto ao passar o mouse */
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    right: -250px; /* Inicialmente oculto fora da tela */
+    width: 250px;
+    height: 100%;
+    background-color: #f8f9fa;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: right 0.3s ease-in-out;
+    z-index: 11; 
+    overflow-y: auto;  /* Adicione esta linha para permitir rolagem se o conteúdo for maior que a altura da tela */
+    background-color: #333;
+}
+  
+.sidebar.active {
+    right: 0; 
+}
+
+.sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px; 
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Espaçamento entre o ícone e o nome */
+}
+
+.user-info svg {
+    width: 30px;
+    height: 30px;
+}
+
+.user-info #nome-usuario-sidebar {
+    margin: 10px 0px 0px 10px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #ccc;
+}
+
+.close-sidebar {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #ccc;
+    margin: 15px 10px;
+}
+
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+}
+
+.button-sidebar-menu {
+    margin-bottom: 10px;
+    text-align: center;  /* Centraliza o texto dentro do <li> */
+}
+
+.area-btn-sidebar-menu {
+    padding: 10px 50px 10px 50px;
+    text-decoration: none;
+}
+
+.area-btn-sidebar-menu:hover {
+    background-color: #424242;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.txt-btn-sidebar-menu {
+    color: #ccc;
 }

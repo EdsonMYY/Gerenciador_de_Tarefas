@@ -18,6 +18,10 @@ document.addEventListener('DOMContentLoaded', function () {
         objectStore.createIndex('prioridade', 'prioridade', { unique: false });
         objectStore.createIndex('categoria', 'categoria', { unique: false });
         objectStore.createIndex('status', 'status', { unique: false }); // Adiciona o índice para status
+
+        if (!db.objectStoreNames.contains('preferenciasNotificacoes')) {
+            db.createObjectStore('preferenciasNotificacoes', { keyPath: 'tarefaId' });
+        }
     };
 
     request.onsuccess = function (event) {
@@ -26,6 +30,50 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     formTarefa.addEventListener('submit', adicionarTarefa);
+
+
+
+
+
+    const sidebar = document.getElementById('sidebar');
+    const nomeUsuario = document.getElementById('nome-usuario');
+    const iconeUsuario = nomeUsuario.querySelector('svg');
+    const closeSidebarButton = document.getElementById('close-sidebar'); 
+
+    // Abrir o sidebar
+    nomeUsuario.addEventListener('click', openSidebar);
+    iconeUsuario.addEventListener('click', openSidebar);
+
+    // Fechar o sidebar
+    closeSidebarButton.addEventListener('click', closeSidebar);
+
+    document.addEventListener('click', function(event) {
+        // Verifica se o clique foi fora do sidebar E fora do botão que o abre
+        if (!sidebar.contains(event.target) && 
+            !nomeUsuario.contains(event.target) && 
+            sidebar.classList.contains('active')) {
+            
+            closeSidebar();
+        }
+    });
+
+    function openSidebar() {
+        sidebar.classList.add('active');
+    }
+
+    function closeSidebar() {
+        sidebar.classList.remove('active');
+    }
+
+    const aboutButton = document.getElementById('about-button');
+    aboutButton.addEventListener('click', function() {
+        $('#modalAbout').modal('show');
+    });
+
+
+
+
+
 
     function adicionarTarefa(event) {
         event.preventDefault();
@@ -54,86 +102,102 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function carregarTarefas() {
-        listaTarefas.innerHTML = '';
-
+        listaTarefas.innerHTML = ''; // Limpa a lista antes de carregar as tarefas
+      
         const transaction = db.transaction(['tarefas'], 'readonly');
         const objectStore = transaction.objectStore('tarefas');
         const request = objectStore.getAll();
+      
+        request.onsuccess = async function (event) {
+          const tarefas = event.target.result;
+      
+          for (const tarefa of tarefas) { // Usando um loop for...of para usar await dentro dele
+            const listItem = document.createElement('div');
+            listItem.classList.add('list-group-item', `categoria-${tarefa.categoria}`);
+            listItem.id = `tarefa-${tarefa.id}`; 
+      
+            listItem.innerHTML = `
+              <div>
+                <h5 class="mb-1 ${tarefa.prioridade ? `prioridade-${tarefa.prioridade}` : ''}">${tarefa.titulo}</h5>
+                <p class="mb-1">${tarefa.descricao}</p>
+                <small>Data: ${tarefa.data ? tarefa.data : 'Sem data'}</small>
+                <small>Categoria: <span class="badge badge-pill badge-primary">${tarefa.categoria}</span></small>
+                <small>Status: <span class="badge badge-pill ${tarefa.status === 'pendente' ? 'badge-danger status-pendente' : 'badge-success status-encerrada'}">${tarefa.status}</span></small>
+                <div class="acoes">
+                  <i class="fas fa-edit"></i>
+                  <i class="fas fa-trash-alt" data-tarefa-id="${tarefa.id}"></i>
+                  <i class="fas fa-check-square btn-concluir" data-tarefa-id="${tarefa.id}"></i>
+                </div>
+              </div>
+            `;
+      
+            listaTarefas.appendChild(listItem);
 
-        request.onsuccess = function (event) {
-            const tarefas = event.target.result;
-
-            tarefas.forEach(tarefa => {
-                const listItem = document.createElement('div');
-                listItem.classList.add('list-group-item', `categoria-${tarefa.categoria}`);
-
-                listItem.classList.add('hoverable');
-
-                listItem.id = `tarefa-${tarefa.id}`; // Usando o ID da tarefa para garantir a unicidade
-
-
-
-                // Adicionando informações da tarefa
-                listItem.innerHTML = `
-                    <div>
-                        <h5 class="mb-1 ${tarefa.prioridade ? `prioridade-${tarefa.prioridade}` : ''}">${tarefa.titulo}</h5>
-                        <p class="mb-1">${tarefa.descricao}</p>
-                        <small>Data: ${tarefa.data ? tarefa.data : 'Sem data'}</small>
-                        <small>Categoria: <span class="badge badge-pill badge-primary">${tarefa.categoria}</span></small>
-                        <small>Status: <span class="badge badge-pill ${tarefa.status === 'pendente' ? 'badge-danger status-pendente' : 'badge-success status-encerrada'}">${tarefa.status}</span></small>
-                        <div class="acoes">
-                            <i class="fas fa-edit"></i> 
-                            <i class="fas fa-trash-alt" data-tarefa-id="${tarefa.id}"></i> 
-                            <i class="fas fa-check-square" data-tarefa-id="${tarefa.id}"></i> </div>
-                    </div>
-                `;
-
-
-                const iconesAcao = listItem.querySelectorAll('.acoes i');
-                iconesAcao.forEach(icone => {
-                    icone.addEventListener('click', function(event) {
-                        event.stopPropagation(); // Impede a propagação do evento de clique
-                    });
-                });
-
-
-                listItem.addEventListener('click', function(event) {
-                    // Verificar se o clique não foi nos ícones de ação
-                    if (event.target.classList.contains('fa-edit') || event.target.classList.contains('fa-trash-alt')) {
-                        return; // Não faz nada se o clique foi em um ícone de ação
-                    }
-            
-                    // Preencher o modal de visualização com os dados da tarefa
-                    document.getElementById('visualizar-titulo').textContent = tarefa.titulo;
-                    document.getElementById('visualizar-descricao').textContent = tarefa.descricao;
-                    document.getElementById('visualizar-data').textContent = tarefa.data ? tarefa.data : 'Sem data';
-                    document.getElementById('visualizar-prioridade').textContent = tarefa.prioridade;
-                    document.getElementById('visualizar-categoria').textContent = tarefa.categoria;
-                    document.getElementById('visualizar-status').textContent = tarefa.status;
-            
-                    // Abrir o modal de visualização
-                    $('#modalVisualizarTarefa').modal('show');
-                });
-
-                listaTarefas.appendChild(listItem);
-
-                // Icone para conluir a tarefa
-                const botaoConcluir = listItem.querySelector('.fa-check-square');
-                botaoConcluir.addEventListener('click', function() {
-                    const tarefaId = parseInt(this.dataset.tarefaId);
-                    concluirTarefa(tarefaId);
-                });
-
-                // Adicionar evento de click no ícone de edição
-                const iconeEditar = listItem.querySelector('.fa-edit');
-                iconeEditar.addEventListener('click', abrirModalEditarTarefa);
-
-                // Adicionar evento de click no ícone de lixeira (excluir)
-                const iconeExcluir = listItem.querySelector('.fa-trash-alt');
-                iconeExcluir.addEventListener('click', excluirTarefa);
+            const iconeConcluir = listItem.querySelector('.btn-concluir');
+            if (tarefa.status === 'concluido') {
+                iconeConcluir.classList.remove('fa-check-square');
+                iconeConcluir.classList.add('fa-undo');
+            } else {
+                iconeConcluir.classList.add('fa-check-square');
+                iconeConcluir.classList.remove('fa-undo');
+            }
+      
+            const iconeEditar = listItem.querySelector('.fa-edit');
+            iconeEditar.addEventListener('click', abrirModalEditarTarefa);
+      
+            const iconeExcluir = listItem.querySelector('.fa-trash-alt');
+            iconeExcluir.addEventListener('click', excluirTarefa);
+      
+            const botaoConcluir = listItem.querySelector('.btn-concluir');
+            botaoConcluir.addEventListener('click', function () {
+              const tarefaId = parseInt(this.dataset.tarefaId);
+              concluirTarefa(tarefaId);
             });
+      
+            // Verificar se a tarefa está dentro do prazo e se deve ser notificada
+            const tempoRestante = calcularTempoRestante(tarefa.data);
+            if (tempoRestante <= 5 && tempoRestante >= 0) {
+              try {
+                const notificacaoDesativada = await verificarPreferenciaNotificacao(tarefa.id);
+      
+                if (!notificacaoDesativada) {
+                  exibirNotificacao(tarefa);
+                }
+              } catch (error) {
+                console.error('Erro ao verificar preferência:', error);
+                exibirNotificacao(tarefa);
+              }
+            }
+      
+            // Impedir que o clique nos ícones se propague para o elemento pai
+            const iconesAcao = listItem.querySelectorAll('.acoes i');
+            iconesAcao.forEach(icone => {
+              icone.addEventListener('click', function (event) {
+                event.stopPropagation();
+              });
+            });
+      
+            // Adicionar evento de clique no item da lista para abrir o modal de visualização
+            listItem.addEventListener('click', function (event) {
+              if (event.target.classList.contains('fa-edit') || event.target.classList.contains('fa-trash-alt') || event.target.classList.contains('btn-concluir')) {
+                return;
+              }
+      
+              const tarefaClicada = tarefas.find(t => t.id === tarefa.id); // Encontra a tarefa correspondente
+              if (tarefaClicada) {
+                document.getElementById('visualizar-titulo').textContent = tarefaClicada.titulo;
+                document.getElementById('visualizar-descricao').textContent = tarefaClicada.descricao;
+                document.getElementById('visualizar-data').textContent = tarefaClicada.data ? tarefaClicada.data : 'Sem data';
+                document.getElementById('visualizar-prioridade').textContent = tarefaClicada.prioridade;
+                document.getElementById('visualizar-categoria').textContent = tarefaClicada.categoria;
+                document.getElementById('visualizar-status').textContent = tarefaClicada.status;
+      
+                $('#modalVisualizarTarefa').modal('show');
+              }
+            });
+          }
         };
-    }
+      }
 
     function buscarTarefaPorId(id) {
         let tarefaEncontrada = null; 
@@ -211,25 +275,38 @@ document.addEventListener('DOMContentLoaded', function () {
             data: document.getElementById('editar-data').value,
             prioridade: document.getElementById('editar-prioridade').value,
             categoria: document.getElementById('editar-categoria').value,
+
+            status: buscarTarefaPorId(tarefaId).then(tarefa => {
+                return tarefa ? tarefa.status : 'pendente'; // Retorna o status da tarefa ou 'pendente' se a tarefa não for encontrada
+            })
             // ... outros campos que você quer atualizar
         };
 
-        // Atualizar a tarefa no IndexedDB
-        const transaction = db.transaction(['tarefas'], 'readwrite');
-        const objectStore = transaction.objectStore('tarefas');
-        const request = objectStore.put(tarefaAtualizada);
+        tarefaAtualizada.status.then(status => {
+            tarefaAtualizada.status = status; 
 
-        request.onsuccess = function () {
-            // Fechar o modal
-            $('#modalEditarTarefa').modal('hide');
+            // Atualizar a tarefa no IndexedDB
+            const transaction = db.transaction(['tarefas'], 'readwrite');
+            const objectStore = transaction.objectStore('tarefas');
+            const request = objectStore.put(tarefaAtualizada);
 
-            // Atualizar a lista de tarefas na interface do usuário
-            atualizarTarefaNaLista(tarefaAtualizada);
-        };
+            request.onsuccess = function () {
+                // Fechar o modal
+                $('#modalEditarTarefa').modal('hide');
 
-        request.onerror = function (event) {
-            console.error('Erro ao atualizar tarefa:', event.target.error);
-        };
+                // Atualizar a lista de tarefas na interface do usuário
+                atualizarTarefaNaLista(tarefaAtualizada);
+
+
+                const listItem = document.getElementById(`tarefa-${tarefaAtualizada.id}`);
+                listItem.classList.remove('categoria-pessoal', 'categoria-profissional', 'categoria-academica'); 
+                listItem.classList.add(`categoria-${tarefaAtualizada.categoria}`);
+            };
+
+            request.onerror = function (event) {
+                console.error('Erro ao atualizar tarefa:', event.target.error);
+            };
+        });
     }
 
     // Função para atualizar a tarefa na lista da interface do usuário
@@ -243,7 +320,10 @@ document.addEventListener('DOMContentLoaded', function () {
             const tituloElemento = listItem.querySelector('h5');
             const descricaoElemento = listItem.querySelector('p');
             const dataElemento = listItem.querySelector('small');
-            const statusElemento = listItem.querySelector('.status-pendente');
+            const statusElemento = listItem.querySelector('.status-pendente, .status-encerrada');
+
+            const categoriaElemento = listItem.querySelector('.badge-primary'); // Seletor para o elemento da categoria
+            categoriaElemento.textContent = tarefa.categoria;
 
             tituloElemento.textContent = tarefa.titulo;
             tituloElemento.className = `mb-1 ${tarefa.prioridade ? `prioridade-${tarefa.prioridade}` : ''}`; // Atualiza a classe de prioridade
@@ -254,6 +334,20 @@ document.addEventListener('DOMContentLoaded', function () {
             // Atualizar o status da tarefa
             statusElemento.className = `badge badge-pill ${tarefa.status === 'pendente' ? 'badge-danger status-pendente' : 'badge-success status-encerrada'}`;
             statusElemento.textContent = tarefa.status;
+
+            if (tarefa.status === 'pendente') {
+                statusElemento.classList.add('badge-danger', 'status-pendente');
+                statusElemento.classList.remove('badge-success', 'status-encerrada');
+                statusElemento.textContent = 'pendente';
+              } else {
+                statusElemento.classList.remove('badge-danger', 'status-pendente');
+                statusElemento.classList.add('badge-success', 'status-encerrada');
+                statusElemento.textContent = 'concluido';
+              }
+
+            listItem.classList.remove('categoria-pessoal', 'categoria-profissional', 'categoria-academica');
+
+            listItem.classList.add(`categoria-${tarefa.categoria}`);
 
             // Atualizar a classe da categoria
             listItem.className = `list-group-item categoria-${tarefa.categoria}`;
@@ -266,36 +360,41 @@ document.addEventListener('DOMContentLoaded', function () {
     function concluirTarefa(tarefaId) {
         const transaction = db.transaction(['tarefas'], 'readwrite');
         const objectStore = transaction.objectStore('tarefas');
-
-        // Obter a tarefa do IndexedDB
+      
         const request = objectStore.get(tarefaId);
-
+      
         request.onsuccess = function(event) {
-            const tarefa = event.target.result;
-
-            // Verificar se a tarefa foi encontrada
-            if (tarefa) {
-                // Atualizar o status da tarefa
-                tarefa.status = 'concluido';
-
-                // Atualizar a tarefa no IndexedDB
-                const requestUpdate = objectStore.put(tarefa);
-
-                requestUpdate.onsuccess = function() {
-                    // Atualizar a interface do usuário
-                    // (Você pode querer adicionar lógica aqui para mudar a aparência da tarefa na lista, 
-                    // por exemplo, riscando o texto ou mudando a cor)
-
-                    // Exemplo: Mudando a classe do status na interface do usuário
-                    const listItem = document.querySelector(`#lista-tarefas [data-tarefa-id="${tarefaId}"]`).parentNode.parentNode;
-                    const statusElemento = listItem.querySelector('.status-pendente, .status-encerrada'); 
-                    statusElemento.classList.remove('badge-danger', 'status-pendente'); 
-                    statusElemento.classList.add('badge-success', 'status-encerrada');
-                    statusElemento.textContent = 'concluido';
-                }
+          const tarefa = event.target.result;
+      
+          if (tarefa) {
+            // Alterna o status da tarefa
+            tarefa.status = tarefa.status === 'pendente' ? 'concluido' : 'pendente';
+      
+            const requestUpdate = objectStore.put(tarefa);
+      
+            requestUpdate.onsuccess = function() {
+              // Atualizar a interface do usuário
+              const listItem = document.querySelector(`#lista-tarefas [data-tarefa-id="${tarefaId}"]`).parentNode.parentNode;
+              const statusElemento = listItem.querySelector('.status-pendente, .status-encerrada');
+              const iconeConcluir = listItem.querySelector('.btn-concluir'); 
+      
+              if (tarefa.status === 'concluido') {
+                statusElemento.classList.remove('badge-danger', 'status-pendente');
+                statusElemento.classList.add('badge-success', 'status-encerrada');
+                statusElemento.textContent = 'concluido';
+                iconeConcluir.classList.remove('fa-check-square'); 
+                iconeConcluir.classList.add('fa-undo');        
+              } else {
+                statusElemento.classList.add('badge-danger', 'status-pendente');
+                statusElemento.classList.remove('badge-success', 'status-encerrada');
+                statusElemento.textContent = 'pendente';
+                iconeConcluir.classList.add('fa-check-square'); 
+                iconeConcluir.classList.remove('fa-undo');       
+              }
             }
+          }
         };
-    }
+      }
 
     function excluirTarefa(event) {
         const tarefaId = parseInt(event.target.dataset.tarefaId);
@@ -308,4 +407,76 @@ document.addEventListener('DOMContentLoaded', function () {
             event.target.parentNode.parentNode.remove();
         };
     }
+
+
+
+    function verificarPreferenciaNotificacao(tarefaId) {
+        return new Promise((resolve, reject) => {
+          const transaction = db.transaction(['preferenciasNotificacoes'], 'readonly');
+          const objectStore = transaction.objectStore('preferenciasNotificacoes');
+          const request = objectStore.get(tarefaId);
+      
+          request.onsuccess = (event) => {
+            const preferencia = event.target.result;
+            resolve(preferencia && preferencia.naoNotificar ? true : false); 
+          };
+      
+          request.onerror = (event) => {
+            console.error('Erro ao verificar preferência de notificação:', event.target.error);
+            reject(event.target.error);
+          };
+        });
+    }
+
+    function salvarPreferenciaNotificacao(tarefaId) {
+        const transaction = db.transaction(['preferenciasNotificacoes'], 'readwrite');
+        const objectStore = transaction.objectStore('preferenciasNotificacoes');
+        const request = objectStore.put({ tarefaId: tarefaId, naoNotificar: true }); 
+      
+        request.onsuccess = (event) => {
+          console.log(`Preferência para tarefa ${tarefaId} salva com sucesso!`);
+        };
+      
+        request.onerror = (event) => {
+          console.error('Erro ao salvar preferência de notificação:', event.target.error);
+        };
+    }
+
+    function exibirNotificacao(tarefa) {
+        const notificacaoDiv = document.getElementById('notificacao');
+        const mensagemNotificacao = document.getElementById('notificacao-mensagem');
+        const checkboxNaoNotificar = document.getElementById('nao-notificar-novamente');
+        const botaoFechar = document.getElementById('fechar-notificacao');
+      
+        // Calcula o tempo restante em dias
+        const tempoRestante = calcularTempoRestante(tarefa.data); 
+      
+        mensagemNotificacao.textContent = `A tarefa "${tarefa.titulo}" irá fechar em ${tempoRestante} dias.`;
+      
+        // Define o estado inicial da checkbox (desmarcado)
+        checkboxNaoNotificar.checked = false;
+      
+        notificacaoDiv.style.display = 'block';
+      
+        // Adicionar evento para fechar a notificação
+        botaoFechar.addEventListener('click', () => {
+          notificacaoDiv.style.display = 'none';
+        });
+      
+        // Lógica para salvar a preferência "Não notificar novamente"
+        checkboxNaoNotificar.addEventListener('change', () => {
+          if (checkboxNaoNotificar.checked) {
+            salvarPreferenciaNotificacao(tarefa.id); // Chama a função para salvar no IndexedDB
+            console.log(`Não notificar novamente sobre a tarefa ${tarefa.id}`);
+          }
+        });
+    }
+      
+  function calcularTempoRestante(dataPrazo) {
+    const hoje = new Date();
+    const prazo = new Date(dataPrazo);
+    const diffTempo = prazo.getTime() - hoje.getTime();
+    const diffDias = Math.ceil(diffTempo / (1000 * 60 * 60 * 24)); 
+    return diffDias;
+  }
 });
