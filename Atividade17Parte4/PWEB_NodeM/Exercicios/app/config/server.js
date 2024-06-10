@@ -9,6 +9,6 @@ app.set('views','./app/views');
 
 //consign().include('app/routes').into(app);
 
-consign({cwd:'app'}).include('routes').then('config/dbConnection.js').into(app);
+consign({cwd:'app'}).include('routes').then('config/dbConnection.js').then(models).into(app);
 
 module.exports = app
