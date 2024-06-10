@@ -45,6 +45,11 @@ h1, h3 {
   resize: vertical; /* Permite que o usuário redimensione verticalmente */
 }
 
+.visualizacao-descricao {
+  word-wrap: break-word; /* Quebra linhas em palavras longas */
+  overflow-wrap: break-word; /* Força a quebra de linha mesmo em palavras muito longas ou URLs */ 
+}
+
 .textarea-limitada {
     max-height: 160px; /* Defina a altura máxima desejada */
     overflow-y: auto;  /* Adiciona barra de rolagem vertical quando necessário */
