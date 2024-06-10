@@ -150,14 +150,26 @@ header .user {
 
 @media (max-width: 768px) {
     header {
-      flex-direction: column; /* Mudar para layout vertical */
-      align-items: center;   /* Centralizar os elementos */
+      flex-direction: row; /* Coloca os elementos em linha */
+      justify-content: space-between; /* Distribui o espaço entre os elementos */
+      align-items: center; /* Alinha os elementos verticalmente */
+      padding: 10px 20px; /* Ajusta o espaçamento interno para telas menores */
     }
   
-    header .logo {
-      margin-bottom: 10px; /* Adicionar margem inferior */
+    .logo {
+      margin-left: 0; /* Remove a margem esquerda da logo */
+      font-size: 1.2em; /* Diminui o tamanho da logo */
     }
-}
+  
+    header .user {
+      margin-right: 0; /* Remove a margem direita do usuário */
+    }
+  
+    header .user svg {
+      width: 1.2em; /* Diminui o tamanho do ícone do usuário */
+      height: 1.2em;
+    }
+  }
 
 .bottom-footer {
     margin-top: 80px;
