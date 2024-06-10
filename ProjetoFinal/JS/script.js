@@ -124,7 +124,6 @@ document.addEventListener('DOMContentLoaded', function () {
             listItem.innerHTML = `
               <div>
                 <h5 class="mb-1 ${tarefa.prioridade ? `prioridade-${tarefa.prioridade}` : ''}">${tarefa.titulo}</h5>
-                <p class="mb-1">${tarefa.descricao}</p>
                 <small>Data de Término: ${formatarData(tarefa.data)}</small>
                 <small>Categoria: <span class="badge badge-pill badge-primary">${tarefa.categoria}</span></small>
                 <small>Status: <span class="badge badge-pill ${tarefa.status === 'pendente' ? 'badge-danger status-pendente' : 'badge-success status-encerrada'}">${tarefa.status}</span></small>
