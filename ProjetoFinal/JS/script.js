@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', function () {
               <div>
                 <h5 class="mb-1 ${tarefa.prioridade ? `prioridade-${tarefa.prioridade}` : ''}">${tarefa.titulo}</h5>
                 <p class="mb-1">${tarefa.descricao}</p>
-                <small>Data: ${formatarData(tarefa.data)}</small>
+                <small>Data de Término: ${formatarData(tarefa.data)}</small>
                 <small>Categoria: <span class="badge badge-pill badge-primary">${tarefa.categoria}</span></small>
                 <small>Status: <span class="badge badge-pill ${tarefa.status === 'pendente' ? 'badge-danger status-pendente' : 'badge-success status-encerrada'}">${tarefa.status}</span></small>
                 <div class="acoes">
@@ -192,7 +192,7 @@ document.addEventListener('DOMContentLoaded', function () {
               if (tarefaClicada) {
                 document.getElementById('visualizar-titulo').textContent = tarefaClicada.titulo;
                 document.getElementById('visualizar-descricao').textContent = tarefaClicada.descricao;
-                document.getElementById('visualizar-data').textContent = tarefaClicada.data ? tarefaClicada.data : 'Sem data';
+                document.getElementById('visualizar-data').textContent = tarefaClicada.data ? formatarData(tarefaClicada.data) : 'Sem data';
                 document.getElementById('visualizar-prioridade').textContent = tarefaClicada.prioridade;
                 document.getElementById('visualizar-categoria').textContent = tarefaClicada.categoria;
                 document.getElementById('visualizar-status').textContent = tarefaClicada.status;
@@ -453,6 +453,8 @@ document.addEventListener('DOMContentLoaded', function () {
         botaoExcluir.setAttribute('type', 'button');
         botaoExcluir.textContent = 'Excluir';
 
+        const listItemParaRemover = event.target.parentNode.parentNode.parentNode; 
+
         // Adicionar eventos aos botões
         botaoExcluir.addEventListener('click', function () {
             // Excluir a tarefa do IndexedDB
@@ -462,7 +464,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             request.onsuccess = function () {
                 // Remover o item da lista 
-                event.target.parentNode.parentNode.remove();
+                listItemParaRemover.remove();
                 $('#modalExcluirConfirmacao').modal('hide');
             };
         });
