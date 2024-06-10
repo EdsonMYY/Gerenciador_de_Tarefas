@@ -42,7 +42,6 @@ h1, h3 {
 
 #descricao, 
 #editar-descricao {
-  rows: 4; /* Define a altura inicial como 4 linhas */
   resize: vertical; /* Permite que o usuário redimensione verticalmente */
 }
 
