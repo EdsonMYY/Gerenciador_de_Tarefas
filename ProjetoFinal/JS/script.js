@@ -401,17 +401,113 @@ document.addEventListener('DOMContentLoaded', function () {
         };
       }
 
-    function excluirTarefa(event) {
-        const tarefaId = parseInt(event.target.dataset.tarefaId);
-        const transaction = db.transaction(['tarefas'], 'readwrite');
-        const objectStore = transaction.objectStore('tarefas');
-        const request = objectStore.delete(tarefaId);
 
-        request.onsuccess = function () {
-            // Remover o item da lista 
-            event.target.parentNode.parentNode.remove();
-        };
+
+      
+
+
+
+
+
+
+      function excluirTarefa(event) {
+        const tarefaId = parseInt(event.target.dataset.tarefaId);
+
+        // Criar o modal de confirmação
+        const modal = document.createElement('div');
+        modal.classList.add('modal', 'fade');
+        modal.id = 'modalExcluirConfirmacao';
+        modal.setAttribute('tabindex', '-1');
+        modal.setAttribute('role', 'dialog');
+        modal.setAttribute('aria-labelledby', 'modalExcluirConfirmacaoLabel');
+        modal.setAttribute('aria-hidden', 'true');
+
+        const modalDialog = document.createElement('div');
+        modalDialog.classList.add('modal-dialog');
+        modalDialog.role = 'document';
+
+        const modalContent = document.createElement('div');
+        modalContent.classList.add('modal-content');
+
+        const modalHeader = document.createElement('div');
+        modalHeader.classList.add('modal-header');
+
+        const tituloModal = document.createElement('h5');
+        tituloModal.classList.add('modal-title');
+        tituloModal.id = 'modalExcluirConfirmacaoLabel';
+        tituloModal.textContent = 'Excluir Tarefa';
+
+        const botaoFechar = document.createElement('button');
+        botaoFechar.classList.add('close');
+        botaoFechar.setAttribute('type', 'button');
+        botaoFechar.setAttribute('data-dismiss', 'modal');
+        botaoFechar.setAttribute('aria-label', 'Fechar');
+        botaoFechar.innerHTML = '<span aria-hidden="true">×</span>';
+
+        const modalBody = document.createElement('div');
+        modalBody.classList.add('modal-body');
+        modalBody.textContent = 'Tem certeza que deseja excluir esta tarefa?';
+
+        const modalFooter = document.createElement('div');
+        modalFooter.classList.add('modal-footer');
+
+        const botaoCancelar = document.createElement('button');
+        botaoCancelar.classList.add('btn', 'btn-secondary');
+        botaoCancelar.setAttribute('type', 'button');
+        botaoCancelar.setAttribute('data-dismiss', 'modal');
+        botaoCancelar.textContent = 'Cancelar';
+
+        const botaoExcluir = document.createElement('button');
+        botaoExcluir.classList.add('btn', 'btn-danger');
+        botaoExcluir.setAttribute('type', 'button');
+        botaoExcluir.textContent = 'Excluir';
+
+        // Adicionar eventos aos botões
+        botaoExcluir.addEventListener('click', function () {
+            // Excluir a tarefa do IndexedDB
+            const transaction = db.transaction(['tarefas'], 'readwrite');
+            const objectStore = transaction.objectStore('tarefas');
+            const request = objectStore.delete(tarefaId);
+
+            request.onsuccess = function () {
+                // Remover o item da lista 
+                event.target.parentNode.parentNode.remove();
+                $('#modalExcluirConfirmacao').modal('hide');
+            };
+        });
+
+        // Montar o modal
+        modalHeader.appendChild(tituloModal);
+        modalHeader.appendChild(botaoFechar);
+
+        modalContent.appendChild(modalHeader);
+        modalContent.appendChild(modalBody);
+        modalContent.appendChild(modalFooter);
+
+        modalFooter.appendChild(botaoCancelar);
+        modalFooter.appendChild(botaoExcluir);
+
+        modalDialog.appendChild(modalContent);
+        modal.appendChild(modalDialog);
+
+        // Adicionar o modal ao DOM
+        document.body.appendChild(modal);
+
+        // Exibir o modal
+        $(`#modalExcluirConfirmacao`).modal('show');
+
+        // Remover o modal do DOM após fechar
+        $(`#modalExcluirConfirmacao`).on('hidden.bs.modal', function () {
+            document.body.removeChild(modal);
+        });
     }
+
+
+
+
+
+
+
 
     function verificarPreferenciaNotificacao(tarefaId) {
         return new Promise((resolve, reject) => {
