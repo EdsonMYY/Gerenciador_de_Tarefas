@@ -98,12 +98,12 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!data) return "";
       
         const dataObj = new Date(data);
-        const dia = dataObj.getDate().toString().padStart(2, '0');
-        const mes = (dataObj.getMonth() + 1).toString().padStart(2, '0'); 
-        const ano = dataObj.getFullYear();
-      
-        // Retorna o formato correto com base no parâmetro 'paraEdicao'
-        return paraEdicao ? `${ano}-${mes}-${dia}` : `${dia}/${mes}/${ano}`; 
+  
+        // Formata a data como UTC (AAAA-MM-DDTHH:mm:ss.sssZ)
+        const dataUTC = dataObj.toISOString();
+
+        // Retorna a data no formato desejado
+        return paraEdicao ? dataUTC.slice(0, 10) : dataUTC.slice(0, 10).split('-').reverse().join('/');
     }
 
     function carregarTarefas() {
@@ -316,24 +316,21 @@ document.addEventListener('DOMContentLoaded', function () {
     // Função para atualizar a tarefa na lista da interface do usuário
     function atualizarTarefaNaLista(tarefa) {
         // Encontrar o item da lista (listItem) pelo ID da tarefa
-        const listItem = document.querySelector(`#lista-tarefas .list-group-item:has([data-tarefa-id="${tarefa.id}"])`);
+        const listItem = document.getElementById(`tarefa-${tarefa.id}`);
 
         // Verificar se o elemento foi encontrado
         if (listItem) {
-            // Atualizar o conteúdo do item da lista
-            const tituloElemento = listItem.querySelector('h5');
-            const descricaoElemento = listItem.querySelector('p');
-            const dataElemento = listItem.querySelector('small');
-            const statusElemento = listItem.querySelector('.status-pendente, .status-encerrada');
+          // Atualizar o conteúdo do item da lista
+          const tituloElemento = listItem.querySelector('h5');
+          const dataElemento = listItem.querySelector('small');
+          const statusElemento = listItem.querySelector('.status-pendente, .status-encerrada');
+          
 
             const categoriaElemento = listItem.querySelector('.badge-primary'); // Seletor para o elemento da categoria
             categoriaElemento.textContent = tarefa.categoria;
-
             tituloElemento.textContent = tarefa.titulo;
-            tituloElemento.className = `mb-1 ${tarefa.prioridade ? `prioridade-${tarefa.prioridade}` : ''}`; // Atualiza a classe de prioridade
-
-            descricaoElemento.textContent = tarefa.descricao;
-            dataElemento.textContent = `Data: ${formatarData(tarefa.data)}`;
+            tituloElemento.className = `mb-1 ${tarefa.prioridade ? `prioridade-${tarefa.prioridade}` : ''}`;
+            dataElemento.textContent = `Data de Término: ${formatarData(tarefa.data)}`; 
 
             // Atualizar o status da tarefa
             statusElemento.className = `badge badge-pill ${tarefa.status === 'pendente' ? 'badge-danger status-pendente' : 'badge-success status-encerrada'}`;
