@@ -401,15 +401,6 @@ document.addEventListener('DOMContentLoaded', function () {
         };
       }
 
-
-
-      
-
-
-
-
-
-
       function excluirTarefa(event) {
         const tarefaId = parseInt(event.target.dataset.tarefaId);
 
@@ -501,13 +492,6 @@ document.addEventListener('DOMContentLoaded', function () {
             document.body.removeChild(modal);
         });
     }
-
-
-
-
-
-
-
 
     function verificarPreferenciaNotificacao(tarefaId) {
         return new Promise((resolve, reject) => {
