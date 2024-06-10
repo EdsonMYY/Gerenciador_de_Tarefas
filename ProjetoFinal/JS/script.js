@@ -94,6 +94,18 @@ document.addEventListener('DOMContentLoaded', function () {
         };
     }
 
+    limitarAnoInputDate(document.getElementById('data'));       // Modal Adicionar
+    limitarAnoInputDate(document.getElementById('editar-data'));
+
+    function limitarAnoInputDate(inputElement) {
+      inputElement.addEventListener('input', function(e) {
+        const data = this.value.split('-'); 
+        if (data[0].length > 4) {
+          this.value = data[0].slice(0, 4) + '-' + data[1] + '-' + data[2];
+        }
+      });
+    }
+
     function formatarData(data, paraEdicao = false) {
         if (!data) return "";
       
