@@ -40,6 +40,17 @@ h1, h3 {
   }
 }
 
+#descricao, 
+#editar-descricao {
+  rows: 4; /* Define a altura inicial como 4 linhas */
+  resize: vertical; /* Permite que o usuário redimensione verticalmente */
+}
+
+.textarea-limitada {
+    max-height: 160px; /* Defina a altura máxima desejada */
+    overflow-y: auto;  /* Adiciona barra de rolagem vertical quando necessário */
+}
+
 /* Estilos para as diferentes categorias */
 .categoria-pessoal {
     border-left: 5px solid #28a745; /* Verde */
