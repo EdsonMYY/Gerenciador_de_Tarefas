@@ -1,4 +1,4 @@
-Um Gerenciador de tarefas feito com HTML, CSS e JavaScript
+Um Gerenciador de tarefas feito com HTML, CSS e JavaScript puro.
 
 Imagens da aplicação rodando:
 
